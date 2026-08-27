@@ -67,11 +67,21 @@
     --glass-specular: 0 0% 100%;
     --glass-specular-alpha: 1;
 
-    /* Cheap panels: more opaque, since they carry body text. */
+    /* Card glass. Transparent enough that the blur behind it is visible -
+       at 0.74 the old value was effectively opaque, which is why this never
+       read as glass no matter what sat behind it. */
     --panel-top: 0 0% 100%;
-    --panel-top-alpha: 0.74;
+    --panel-top-alpha: 0.58;
     --panel-bottom: 240 24% 99%;
-    --panel-bottom-alpha: 0.58;
+    --panel-bottom-alpha: 0.42;
+
+    /* Glass is only glass when there is something behind it. This is the
+       ambient light the panes refract - kept broad and slow so it reads as
+       depth rather than as decoration. */
+    --glow-1: 211 100% 60%;
+    --glow-2: 280 90% 65%;
+    --glow-3: 190 90% 60%;
+    --glow-alpha: 0.11;
 
     /* Motion.
        `spring` is UIKit's standard interactive curve - no overshoot, used for
@@ -81,8 +91,8 @@
        `settle` is a longer, softer overshoot for surfaces arriving on screen. */
     --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
-    --ease-gel: cubic-bezier(0.32, 1.16, 0.44, 1);
-    --ease-settle: cubic-bezier(0.24, 1.12, 0.38, 1);
+    --ease-gel: cubic-bezier(0.34, 1.42, 0.5, 1);
+    --ease-settle: cubic-bezier(0.22, 1.28, 0.36, 1);
     --duration-fast: 180ms;
     --duration-base: 280ms;
     --duration-slow: 420ms;
@@ -129,10 +139,18 @@
     --glass-specular: 0 0% 100%;
     --glass-specular-alpha: 0.22;
 
-    --panel-top: 240 6% 16%;
-    --panel-top-alpha: 0.8;
-    --panel-bottom: 240 6% 12%;
-    --panel-bottom-alpha: 0.72;
+    /* Dark glass is lit from within: white at low alpha over black, rather
+       than a grey fill. That is what makes an edge catch light on black. */
+    --panel-top: 0 0% 100%;
+    --panel-top-alpha: 0.11;
+    --panel-bottom: 0 0% 100%;
+    --panel-bottom-alpha: 0.055;
+
+    /* Carries further on black, where there is more room for it. */
+    --glow-1: 211 100% 55%;
+    --glow-2: 280 90% 60%;
+    --glow-3: 190 90% 55%;
+    --glow-alpha: 0.18;
 
 
     --chart-1: 211 100% 52%;
@@ -161,11 +179,14 @@
     font-size: 17px;
     line-height: 1.47;
     letter-spacing: -0.24px;
-    /* Flat neutral, the way systemGroupedBackground is. A tinted canvas is
-       the single clearest tell that an interface is imitating Apple rather
-       than following it - and glass laid over a saturated ground smears that
-       colour into every panel on the page. */
+    /* The ground the panes are lit against. Fixed, so it does not scroll
+       and give away that it is a gradient. */
     background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
+    background-attachment: fixed;
     /* San Francisco where it exists, then the platform's closest equivalent */
     font-family:
       -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI Variable",
@@ -288,25 +309,29 @@
       0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
-  /* Content sits on an opaque surface, never on glass.
+  /* Card glass - a real pane, not a gradient imitating one.
 
-     This is the part that is easy to get wrong. Apple's cards - Settings,
-     Health, Fitness, Wallet - are secondarySystemGroupedBackground: solid
-     white on grey, solid #1C1C1E on black. They are not translucent, they do
-     not blur, and they carry a hairline and a whisper of shadow at most.
+     The blur is unconditional. It used to be wrapped in a min-width: 1024px
+     query, so every phone got a flat fill and the material simply was not
+     there. A slightly smaller radius than the chrome tiers keeps the blur
+     affordable at ten-plus panes per page while still visibly refracting.
 
-     Glass belongs to the layer above this one. Making content translucent
-     too removes the distinction that gives the material its meaning, and
-     costs a compositing layer per card for the privilege. */
+     The rim and the specular edge do most of the work: they are what separate
+     one pane from the next when both are translucent, and without them a
+     screen of glass cards collapses into a single wash. */
   .surface {
-    background-color: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
-  }
-
-  /* On black, depth reads as lightness rather than shadow. */
-  .dark .surface {
-    box-shadow: none;
+    background: linear-gradient(
+      180deg,
+      hsl(var(--panel-top) / var(--panel-top-alpha)),
+      hsl(var(--panel-bottom) / var(--panel-bottom-alpha))
+    );
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.8));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.8)),
+      0 1px 2px rgb(0 0 0 / 0.04),
+      0 10px 30px -12px rgb(0 0 0 / 0.16);
   }
 
   /* Lifts the way a glass tile catches more light when raised. */
@@ -317,8 +342,9 @@
   }
   .glass-lift:hover {
     box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
       0 2px 4px rgb(0 0 0 / 0.05),
-      0 12px 28px -12px rgb(0 0 0 / 0.14);
+      0 16px 40px -12px rgb(0 0 0 / 0.18);
   }
 
   /* Colour seen through glass rather than painted flat: a bright sweep across

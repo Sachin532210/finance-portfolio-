@@ -31,8 +31,8 @@ export default {
       transitionTimingFunction: {
         spring: "cubic-bezier(0.32, 0.72, 0, 1)",
         "out-ios": "cubic-bezier(0.25, 0.1, 0.25, 1)",
-        gel: "cubic-bezier(0.32, 1.16, 0.44, 1)",
-        settle: "cubic-bezier(0.24, 1.12, 0.38, 1)",
+        gel: "cubic-bezier(0.34, 1.42, 0.5, 1)",
+        settle: "cubic-bezier(0.22, 1.28, 0.36, 1)",
       },
       transitionDuration: {
         fast: "180ms",
@@ -78,13 +78,13 @@ export default {
         },
       },
       animation: {
-        rise: "ios-rise var(--duration-slow) cubic-bezier(0.32, 0.72, 0, 1) both",
-        pop: "ios-pop var(--duration-base) cubic-bezier(0.32, 1.16, 0.44, 1) both",
+        rise: "ios-rise var(--duration-settle) cubic-bezier(0.22, 1.28, 0.36, 1) both",
+        pop: "ios-pop var(--duration-base) cubic-bezier(0.34, 1.42, 0.5, 1) both",
         fade: "ios-fade var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
         "fade-out": "ios-fade-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
-        "scale-in": "ios-scale-in var(--duration-base) cubic-bezier(0.32, 1.16, 0.44, 1) both",
+        "scale-in": "ios-scale-in var(--duration-base) cubic-bezier(0.34, 1.42, 0.5, 1) both",
         "scale-out": "ios-scale-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
-        "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.22, 1.28, 0.36, 1) both",
         "sheet-down": "ios-sheet-down var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
         "slide-left": "ios-slide-left var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
         "drawer-in": "ios-drawer-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
