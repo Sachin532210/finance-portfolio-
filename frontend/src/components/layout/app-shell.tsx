@@ -93,10 +93,9 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 rounded-full bg-primary/[0.18]",
-            // Lensing: the rim bends light rather than scattering it, so it
-            // reads brighter and tighter than the fill it encloses.
-            "shadow-[inset_0_0_0_0.5px_hsl(var(--primary)/0.38),inset_0_1px_0_0_rgb(255_255_255/0.45),0_2px_10px_-4px_hsl(var(--primary)/0.5)]",
+            // Clear glass, not a blue fill. The colour belongs to the icon
+            // and label above it - see .glass-lens.
+            "glass-lens pointer-events-none absolute inset-x-0 rounded-full",
             "transition-[top,height,transform] duration-base ease-gel",
           )}
           style={{ top: pill.top, height: pill.height, transform: `scaleY(${stretch})` }}
@@ -362,7 +361,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {indicator ? (
             <span
               aria-hidden
-              className="absolute bottom-1.5 top-1.5 rounded-full bg-primary/15 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)] transition-[left,width] duration-base ease-gel"
+              className="glass-lens absolute bottom-1.5 top-1.5 rounded-full transition-[left,width] duration-base ease-gel"
               style={{ left: indicator.left, width: indicator.width }}
             />
           ) : null}

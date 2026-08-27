@@ -405,6 +405,32 @@
       0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
+  /* The selection lens.
+
+     The reference makes this unambiguous: the selected capsule in a Liquid
+     Glass bar is CLEAR glass, not a coloured fill. It reads as a thicker,
+     brighter lens laid on top of the bar - more opaque than the bar, with a
+     harder rim, and it still shows the photo behind it. The colour lives in
+     the icon and label it sits under, never in the capsule itself.
+
+     Its own backdrop-filter is what makes it read as a second pane rather
+     than as a painted highlight: it blurs the bar's already-blurred output
+     again, which is exactly what a lens sitting on glass does. */
+  .glass-lens {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.22)),
+      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.18))
+    );
+    backdrop-filter: blur(12px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.05);
+    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) + 0.25));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
+      inset 0 -1px 0 0 hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.5)),
+      0 2px 8px -2px rgb(0 0 0 / 0.18);
+  }
+
   /* The tinted chip Apple sets a symbol in. */
   .icon-chip {
     display: inline-flex;
