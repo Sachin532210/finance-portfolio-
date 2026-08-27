@@ -115,7 +115,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
               cn(
                 "ios-press relative z-10 flex items-center gap-3 rounded-full px-3.5 py-2 text-[16px] font-medium tracking-[-0.18px]",
                 isActive
-                  ? "text-primary"
+                  ? "on-lens"
                   : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground",
               )
             }
@@ -374,7 +374,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 cn(
                   "relative z-10 flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full px-0.5 py-1.5",
                   "text-[10px] font-medium transition-colors duration-base",
-                  isActive ? "text-primary" : "text-muted-foreground",
+                  isActive ? "on-lens" : "text-muted-foreground",
                 )
               }
             >

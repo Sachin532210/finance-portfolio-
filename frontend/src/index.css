@@ -67,6 +67,16 @@
     --glass-specular: 0 0% 100%;
     --glass-specular-alpha: 1;
 
+    /* Selection lens. Weighted per theme rather than as one offset: a light
+       sidebar has plenty behind the lens, a dark one has almost nothing, so
+       the same alpha reads as glass in one and as a grey slab in the other. */
+    --lens-top-alpha: 0.72;
+    --lens-bottom-alpha: 0.58;
+    --lens-rim-alpha: 1;
+    /* The accent, darkened for a near-white lens. Plain systemBlue measures
+       3.8:1 here, under the 4.5:1 body-text floor. */
+    --on-lens: 211 100% 44%;
+
     /* Card glass. Transparent enough that the blur behind it is visible -
        at 0.74 the old value was effectively opaque, which is why this never
        read as glass no matter what sat behind it. */
@@ -138,6 +148,14 @@
     --glass-rim-alpha: 0.18;
     --glass-specular: 0 0% 100%;
     --glass-specular-alpha: 0.22;
+
+    /* A quarter of the light-mode weight. Anything heavier stops being a
+       lens and becomes a grey pill, because there is nothing behind it. */
+    --lens-top-alpha: 0.14;
+    --lens-bottom-alpha: 0.08;
+    --lens-rim-alpha: 0.32;
+    /* Brightened, the way Apple lifts accent colours on dark grounds. */
+    --on-lens: 211 100% 72%;
 
     /* Dark glass is lit from within: white at low alpha over black, rather
        than a grey fill. That is what makes an edge catch light on black. */
@@ -419,16 +437,21 @@
   .glass-lens {
     background: linear-gradient(
       180deg,
-      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.22)),
-      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.18))
+      hsl(var(--glass-top) / var(--lens-top-alpha)),
+      hsl(var(--glass-bottom) / var(--lens-bottom-alpha))
     );
-    backdrop-filter: blur(12px) saturate(180%) brightness(1.05);
-    -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.05);
-    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) + 0.25));
+    backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
+    -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
+    border: 1px solid hsl(var(--glass-rim) / var(--lens-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
       inset 0 -1px 0 0 hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.5)),
       0 2px 8px -2px rgb(0 0 0 / 0.18);
+  }
+
+  /* Accent colour chosen for the lens it sits on, not for the page. */
+  .on-lens {
+    color: hsl(var(--on-lens));
   }
 
   /* The tinted chip Apple sets a symbol in. */
