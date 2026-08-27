@@ -217,16 +217,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         }}
         className="glass glass-refract glass-specular fixed inset-y-3 left-3 z-30 hidden w-60 flex-col overflow-hidden rounded-[22px] lg:flex"
       >
-        <div className="flex h-16 items-center gap-2 border-b border-white/10 px-5">
+        <div className="relative z-10 flex h-16 items-center gap-2 border-b border-white/10 px-5">
           <div className="glass-tint rounded-xl bg-primary p-1.5 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.6)]">
             <Wallet className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="text-headline">Finance Track</span>
         </div>
-        <div className="flex-1 overflow-y-auto p-3">
+        <div className="relative z-10 flex-1 overflow-y-auto p-3">
           <NavList />
         </div>
-        <div className="border-t border-white/10 p-3 text-[11px] leading-relaxed text-muted-foreground">
+        <div className="relative z-10 border-t border-white/10 p-3 text-[11px] leading-relaxed text-muted-foreground">
           Planning and educational tool. Not licensed financial advice.
         </div>
       </aside>

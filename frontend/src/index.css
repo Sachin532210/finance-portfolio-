@@ -456,6 +456,10 @@
      not mounted yet, the whole declaration would be invalid and the pane
      would lose its blur entirely - a broken surface instead of a plainer one.
      As a separate layer, a missing filter simply does nothing. */
+  /* NOTE: every real child of a .glass-refract element must be positioned
+     with a z-index. A static child paints below this pseudo-element, which
+     puts it INSIDE the backdrop being displaced - so the surface warps its
+     own text instead of what is behind it. */
   .glass-refract {
     position: relative;
   }
