@@ -29,7 +29,7 @@ function useTheme() {
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <nav className="flex flex-col gap-0.5">
+    <nav className="stagger-children flex flex-col gap-0.5">
       {NAV_ITEMS.map((item) => (
         <NavLink
           key={item.to}
@@ -39,7 +39,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
             cn(
               "ios-press flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[15px] font-medium",
               isActive
-                ? "bg-primary/15 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)] backdrop-blur-sm"
+                ? "glass-tint bg-primary/18 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.4),0_2px_10px_-4px_hsl(var(--primary)/0.5)]"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )
           }
@@ -131,7 +131,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="animate-fade absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+            className="animate-fade absolute inset-0 bg-black/25"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />

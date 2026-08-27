@@ -59,13 +59,13 @@
        Light pools at the top of a pane, the rim catches a hairline of it,
        and the specular highlight sits just inside the top edge. */
     --glass-top: 0 0% 100%;
-    --glass-top-alpha: 0.72;
+    --glass-top-alpha: 0.5;
     --glass-bottom: 240 20% 99%;
-    --glass-bottom-alpha: 0.52;
+    --glass-bottom-alpha: 0.3;
     --glass-rim: 0 0% 100%;
-    --glass-rim-alpha: 0.7;
+    --glass-rim-alpha: 0.75;
     --glass-specular: 0 0% 100%;
-    --glass-specular-alpha: 0.95;
+    --glass-specular-alpha: 1;
 
     /* Cheap panels: more opaque, since they carry body text. */
     --panel-top: 0 0% 100%;
@@ -127,11 +127,11 @@
 
     /* Dark glass is lit from within rather than transmitting light. */
     --glass-top: 0 0% 100%;
-    --glass-top-alpha: 0.1;
+    --glass-top-alpha: 0.13;
     --glass-bottom: 0 0% 100%;
-    --glass-bottom-alpha: 0.04;
+    --glass-bottom-alpha: 0.05;
     --glass-rim: 0 0% 100%;
-    --glass-rim-alpha: 0.14;
+    --glass-rim-alpha: 0.18;
     --glass-specular: 0 0% 100%;
     --glass-specular-alpha: 0.22;
 
@@ -278,8 +278,8 @@
       hsl(var(--glass-top) / var(--glass-top-alpha)),
       hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
     );
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
@@ -290,11 +290,11 @@
   .glass-strong {
     background: linear-gradient(
       180deg,
-      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.16)),
-      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.16))
+      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.1)),
+      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.1))
     );
-    backdrop-filter: blur(40px) saturate(190%);
-    -webkit-backdrop-filter: blur(40px) saturate(190%);
+    backdrop-filter: blur(48px) saturate(210%);
+    -webkit-backdrop-filter: blur(48px) saturate(210%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
@@ -351,18 +351,18 @@
       hsl(var(--glass-top) / var(--glass-top-alpha)),
       hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
     );
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
   }
 
   .ios-material-strong {
     background: linear-gradient(
       180deg,
-      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.16)),
-      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.16))
+      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.1)),
+      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.1))
     );
-    backdrop-filter: blur(40px) saturate(190%);
-    -webkit-backdrop-filter: blur(40px) saturate(190%);
+    backdrop-filter: blur(48px) saturate(210%);
+    -webkit-backdrop-filter: blur(48px) saturate(210%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),

@@ -72,8 +72,8 @@ export default {
           to: { opacity: "1", transform: "none" },
         },
         "ios-drawer-in": {
-          from: { transform: "translate3d(-100%, 0, 0)" },
-          to: { transform: "none" },
+          "0%": { transform: "translate3d(-100%, 0, 0) scaleX(0.94)", opacity: "0.4" },
+          "100%": { transform: "none", opacity: "1" },
         },
       },
       animation: {
@@ -86,7 +86,7 @@ export default {
         "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.22, 1.35, 0.36, 1) both",
         "sheet-down": "ios-sheet-down var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
         "slide-left": "ios-slide-left var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
-        "drawer-in": "ios-drawer-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "drawer-in": "ios-drawer-in var(--duration-slow) cubic-bezier(0.22, 1.35, 0.36, 1) both",
       },
       boxShadow: {
         /* iOS shadows are soft and low-contrast rather than dark and tight */
