@@ -6,6 +6,7 @@ import json
 from typing import List, Optional
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.finance import Expense
@@ -202,9 +203,29 @@ def generate_monthly_report(db: Session, user: User, month: int, year: int, pers
         if existing:
             for k, v in payload.items():
                 setattr(existing, k, v)
+            db.commit()
         else:
-            db.add(MonthlyReport(user_id=user.id, month=month, year=year, **payload))
-        db.commit()
+            # Check-then-insert races: the browser can fire two report loads at
+            # once, and both would pass the "does it exist" check. The savepoint
+            # lets the loser fall back to updating the row the winner just made,
+            # instead of failing the request on the unique constraint.
+            try:
+                with db.begin_nested():
+                    db.add(MonthlyReport(user_id=user.id, month=month, year=year, **payload))
+                db.commit()
+            except IntegrityError:
+                db.rollback()
+                current = db.scalar(
+                    select(MonthlyReport).where(
+                        MonthlyReport.user_id == user.id,
+                        MonthlyReport.month == month,
+                        MonthlyReport.year == year,
+                    )
+                )
+                if current:
+                    for k, v in payload.items():
+                        setattr(current, k, v)
+                    db.commit()
 
     return report
 
