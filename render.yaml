@@ -1,0 +1,83 @@
+# ---------------------------------------------------------------------------
+# Render blueprint for the Finance Track API.
+#
+# Deploy: push this repo to GitHub, then in Render choose
+# "New > Blueprint" and point it at the repository. Render reads this file.
+#
+# The free plan sleeps after 15 minutes of inactivity, so the first request
+# after a quiet period takes roughly 50 seconds to wake the service. Every
+# request after that is normal speed.
+# ---------------------------------------------------------------------------
+
+services:
+  - type: web
+    name: finance-track-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Render pings this to decide whether the service is healthy. It reports
+    # database connectivity too, so a bad DB_* value shows up here immediately.
+    healthCheckPath: /health
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+      - key: ENVIRONMENT
+        value: production
+      # Must be False in production: with DEBUG on, unhandled exception text is
+      # returned to the browser.
+      - key: DEBUG
+        value: "False"
+
+      # Generated once by Render and then held constant. Changing it invalidates
+      # every existing session.
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"
+
+      # --- Database (set these in the Render dashboard, not here) ------------
+      # From your TiDB Cloud / Aiven connection details.
+      - key: DB_ENGINE
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "4000" # TiDB Cloud Serverless; Aiven and most others use 3306
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: finance_track
+
+      # --- CORS -------------------------------------------------------------
+      # Your deployed frontend origin, e.g. https://finance-track.vercel.app
+      # Not needed when the frontend proxies /api through its own domain, but
+      # harmless to set and required if you ever call the API directly.
+      - key: CORS_ORIGINS
+        sync: false
+
+      # --- Optional integrations --------------------------------------------
+      # Leave OPENAI_API_KEY empty to run on the built-in financial engine,
+      # which answers from the same calculations and costs nothing.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: AI_RATE_LIMIT_PER_MINUTE
+        value: "10"
+      - key: AI_RATE_LIMIT_PER_DAY
+        value: "200"
+
+      # Without a market data key, investment prices stay labelled
+      # "user-entered" and are never fabricated.
+      - key: MARKET_DATA_PROVIDER
+        value: finnhub
+      - key: MARKET_DATA_API_KEY
+        sync: false

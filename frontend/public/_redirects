@@ -1,0 +1,8 @@
+# Cloudflare Pages / Netlify equivalent of vercel.json rewrites.
+# Vite copies everything in public/ into dist/, so this ships with the build.
+#
+# Order matters: the API rule must come before the SPA catch-all.
+# Replace the backend host with your own Render URL.
+
+/api/*  https://finance-track-api.onrender.com/api/:splat  200
+/*      /index.html                                        200

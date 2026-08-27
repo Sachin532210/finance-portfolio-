@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# Secrets - never commit these. .env holds the DB password, auth secret and
+# API keys. Use .env.example as the committed template instead.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+# Templates carry no real values and must stay committed.
+!.env.example
+!.env*.example
+
+# --- Python / backend -------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node / frontend --------------------------------------------------------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# --- Local databases --------------------------------------------------------
+*.db
+*.db-journal
+*.sqlite3
+
+# --- Editors / OS -----------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+
+# --- Logs -------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-error.log*
