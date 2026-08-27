@@ -38,31 +38,37 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPrimitive.Portal>
     <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        // Phones get a true iOS sheet: pinned to the bottom, rounded top only,
-        // rising with the spring curve. Desktop keeps a centred card.
-        "glass-strong fixed z-50 grid gap-4 overflow-y-auto p-6",
-        "inset-x-0 bottom-0 max-h-[88vh] rounded-t-[26px] pb-[calc(1.5rem+env(safe-area-inset-bottom))]",
-        "data-[state=open]:animate-sheet-up data-[state=closed]:animate-sheet-down",
-        "sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg",
-        "sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[26px] sm:pb-6",
-        "sm:data-[state=open]:animate-scale-in sm:data-[state=closed]:animate-scale-out",
-        className,
-      )}
-      {...props}
-    >
-      <div
-        className="mx-auto -mt-2 mb-1 h-1 w-9 rounded-full bg-foreground/15 sm:hidden"
-        aria-hidden
-      />
-      {children}
-      <DialogPrimitive.Close className="ios-press absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/8 text-muted-foreground backdrop-blur-sm hover:bg-foreground/15 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
+    {/* Centring lives on this wrapper, not on the panel. A CSS animation's
+        transform replaces the element's own, so a panel that centres itself
+        with -translate-1/2 loses that translate the instant its entrance
+        animation applies a scale. Flexbox keeps the two independent. */}
+    <div className="pointer-events-none fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          // Phones get a true iOS sheet: pinned to the bottom, rounded top
+          // only, rising with the spring curve. Desktop is a centred card.
+          "glass-strong pointer-events-auto grid w-full gap-4 overflow-y-auto overflow-x-hidden p-6",
+          "no-scrollbar",
+          "max-h-[88vh] rounded-t-[26px] pb-[calc(1.5rem+env(safe-area-inset-bottom))]",
+          "data-[state=open]:animate-sheet-up data-[state=closed]:animate-sheet-down",
+          "sm:max-h-[90vh] sm:max-w-lg sm:rounded-[26px] sm:pb-6",
+          "sm:data-[state=open]:animate-scale-in sm:data-[state=closed]:animate-scale-out",
+          className,
+        )}
+        {...props}
+      >
+        <div
+          className="mx-auto -mt-2 mb-1 h-1 w-9 rounded-full bg-foreground/15 sm:hidden"
+          aria-hidden
+        />
+        {children}
+        <DialogPrimitive.Close className="ios-press absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/8 text-muted-foreground backdrop-blur-sm hover:bg-foreground/15 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Content>
+    </div>
   </DialogPrimitive.Portal>
 ));
 DialogContent.displayName = "DialogContent";
@@ -131,7 +137,8 @@ function ConfirmDialog({
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-fade" />
-        <AlertDialogPrimitive.Content className="glass-strong fixed left-1/2 top-1/2 z-50 w-[calc(100%-3rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[26px] p-6 text-center data-[state=open]:animate-scale-in sm:text-left">
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-6">
+          <AlertDialogPrimitive.Content className="glass-strong pointer-events-auto w-full max-w-sm rounded-[26px] p-6 text-center data-[state=open]:animate-scale-in sm:text-left">
           <AlertDialogPrimitive.Title className="text-lg font-semibold">
             {title}
           </AlertDialogPrimitive.Title>
@@ -149,7 +156,8 @@ function ConfirmDialog({
               {confirmLabel}
             </AlertDialogPrimitive.Action>
           </div>
-        </AlertDialogPrimitive.Content>
+          </AlertDialogPrimitive.Content>
+        </div>
       </AlertDialogPrimitive.Portal>
     </AlertDialogPrimitive.Root>
   );
