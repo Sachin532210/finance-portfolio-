@@ -37,14 +37,14 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={({ isActive }) =>
             cn(
-              "ios-press flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[15px] font-medium",
+              "ios-press flex items-center gap-3 rounded-full px-3.5 py-2 text-[16px] font-medium tracking-[-0.18px]",
               isActive
                 ? "glass-tint bg-primary/18 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.4),0_2px_10px_-4px_hsl(var(--primary)/0.5)]"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )
           }
         >
-          <item.icon className="h-4 w-4 shrink-0" />
+          <item.icon className="h-[18px] w-[18px] shrink-0" />
           <span className="truncate">{item.label}</span>
         </NavLink>
       ))}
@@ -63,6 +63,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   // Drives the travelling pill in the mobile tab bar.
   const activeTabIndex = MOBILE_NAV.findIndex((item) =>
+    location.pathname.startsWith(item.to),
+  );
+
+  // The desktop toolbar was an empty strip. macOS names the current section
+  // there, which is also the only always-visible label once the page scrolls.
+  const currentSection = NAV_ITEMS.find((item) =>
     location.pathname.startsWith(item.to),
   );
 
@@ -117,7 +123,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="glass-tint rounded-xl bg-primary p-1.5 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.6)]">
             <Wallet className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-base font-semibold tracking-tight">Finance Track</span>
+          <span className="text-headline">Finance Track</span>
         </div>
         <div className="flex-1 overflow-y-auto p-3">
           <NavList />
@@ -156,7 +162,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* ---------------- Main column ---------------- */}
       <div className="lg:pl-[264px]">
-        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6 lg:mt-3 lg:mr-3 lg:rounded-[22px] lg:border">
+        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6 lg:mr-3 lg:mt-3 lg:h-14 lg:rounded-[22px] lg:border">
           <button
             type="button"
             className="ios-press glass-strong flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:glass lg:hidden"
@@ -173,6 +179,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Wallet className="h-[18px] w-[18px] text-primary" />
             <span className="text-[15px] font-semibold">Finance Track</span>
           </Link>
+
+          {currentSection ? (
+            <div className="hidden min-w-0 items-center gap-2.5 lg:flex">
+              <currentSection.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+              <span className="text-headline truncate">{currentSection.label}</span>
+            </div>
+          ) : null}
 
           <div className="ml-auto flex items-center gap-1.5">
             <button
@@ -236,7 +249,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Bottom padding clears the floating tab bar, which content passes
             beneath rather than stopping above. */}
-        <main className="mx-auto w-full max-w-[1400px] px-4 pb-32 pt-6 sm:px-6 lg:pb-10">
+        <main className="mx-auto w-full max-w-[1400px] px-4 pb-32 pt-6 sm:px-6 lg:pb-10 lg:pl-0 lg:pr-3 lg:pt-4">
           {children}
         </main>
       </div>
