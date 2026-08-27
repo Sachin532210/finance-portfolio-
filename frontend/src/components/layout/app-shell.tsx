@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/overlay";
+import { GlassFilters } from "@/components/shared/glass-filters";
 import { useAuth } from "@/context/auth-context";
 import { useApiQuery, useLocalStorage } from "@/hooks/use-api";
 import { MOBILE_NAV, NAV_ITEMS } from "@/lib/constants";
@@ -88,17 +89,24 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
   }, [stretch]);
 
   return (
-    <nav ref={navRef} className="relative flex flex-col gap-0.5">
+    <nav ref={navRef} className="relative z-10 flex flex-col gap-0.5">
       {pill && (
         <span
           aria-hidden
           className={cn(
             // Clear glass, not a blue fill. The colour belongs to the icon
             // and label above it - see .glass-lens.
-            "glass-lens pointer-events-none absolute inset-x-0 rounded-full",
+            "glass-lens glass-refract glass-refract-tight pointer-events-none absolute inset-x-0 rounded-full",
             "transition-[top,height,transform] duration-base ease-gel",
           )}
-          style={{ top: pill.top, height: pill.height, transform: `scaleY(${stretch})` }}
+          style={{
+            top: pill.top,
+            height: pill.height,
+            // Liquid conserves volume: what it gains along the direction of
+            // travel it gives up across it. Stretching one axis alone reads
+            // as a rubber band being pulled, not as something flowing.
+            transform: `scaleY(${stretch}) scaleX(${1 - (stretch - 1) * 0.55})`,
+          }}
         />
       )}
 
@@ -198,8 +206,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen">
+      <GlassFilters />
+
       {/* ---------------- Desktop sidebar ---------------- */}
-      <aside className="glass fixed inset-y-3 left-3 z-30 hidden w-60 flex-col overflow-hidden rounded-[22px] lg:flex">
+      <aside
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty("--glint-x", `${e.clientX - r.left}px`);
+          e.currentTarget.style.setProperty("--glint-y", `${e.clientY - r.top}px`);
+        }}
+        className="glass glass-refract glass-specular fixed inset-y-3 left-3 z-30 hidden w-60 flex-col overflow-hidden rounded-[22px] lg:flex"
+      >
         <div className="flex h-16 items-center gap-2 border-b border-white/10 px-5">
           <div className="glass-tint rounded-xl bg-primary p-1.5 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.6)]">
             <Wallet className="h-5 w-5 text-primary-foreground" />

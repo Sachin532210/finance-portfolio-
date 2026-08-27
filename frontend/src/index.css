@@ -449,6 +449,51 @@
       0 2px 8px -2px rgb(0 0 0 / 0.18);
   }
 
+  /* Refraction, laid over a pane that is already glass.
+
+     Deliberately a pseudo-element rather than another entry in the pane's own
+     backdrop-filter list. If the filter id were listed there and the SVG had
+     not mounted yet, the whole declaration would be invalid and the pane
+     would lose its blur entirely - a broken surface instead of a plainer one.
+     As a separate layer, a missing filter simply does nothing. */
+  .glass-refract {
+    position: relative;
+  }
+  .glass-refract::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    backdrop-filter: url(#liquid-lens);
+    -webkit-backdrop-filter: url(#liquid-lens);
+  }
+  .glass-refract-tight::before {
+    backdrop-filter: url(#liquid-lens-tight);
+    -webkit-backdrop-filter: url(#liquid-lens-tight);
+  }
+
+  /* A wet surface carries a highlight that slides as the light source moves.
+     On a pointer device the cursor is the light source, so the glint tracks
+     it. Fades in on hover so a surface nobody is touching stays still. */
+  .glass-specular::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out-ios);
+    background: radial-gradient(
+      220px circle at var(--glint-x, 50%) var(--glint-y, 0%),
+      hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.16)),
+      transparent 70%
+    );
+  }
+  .glass-specular:hover::after {
+    opacity: 1;
+  }
+
   /* Accent colour chosen for the lens it sits on, not for the page. */
   .on-lens {
     color: hsl(var(--on-lens));
