@@ -27,7 +27,7 @@ const buttonVariants = cva(
         // iOS "tinted": the accent colour behind frosted glass
         tinted: "bg-primary/12 text-primary backdrop-blur-sm hover:bg-primary/20",
         // Clear glass with a lit rim
-        outline: "glass-panel text-foreground hover:bg-accent/60",
+        outline: "surface text-foreground hover:bg-accent/60",
         secondary: "bg-secondary/80 text-secondary-foreground backdrop-blur-sm hover:bg-secondary",
         ghost: "hover:bg-accent/70",
         link: "rounded-md text-primary underline-offset-4 hover:underline",

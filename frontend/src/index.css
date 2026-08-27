@@ -11,7 +11,7 @@
 @layer base {
   :root {
     /* systemGroupedBackground / secondarySystemGroupedBackground */
-    --background: 240 20% 94%;
+    --background: 240 22% 96%;
     --foreground: 0 0% 0%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
@@ -73,12 +73,6 @@
     --panel-bottom: 240 24% 99%;
     --panel-bottom-alpha: 0.58;
 
-    /* The colour wash behind everything. */
-    --glow-1: 211 100% 60%;
-    --glow-2: 280 90% 65%;
-    --glow-3: 190 90% 60%;
-    --glow-alpha: 0.06;
-
     /* Motion.
        `spring` is UIKit's standard interactive curve - no overshoot, used for
        anything that must not draw attention to itself.
@@ -87,8 +81,8 @@
        `settle` is a longer, softer overshoot for surfaces arriving on screen. */
     --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
-    --ease-gel: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-settle: cubic-bezier(0.22, 1.35, 0.36, 1);
+    --ease-gel: cubic-bezier(0.32, 1.16, 0.44, 1);
+    --ease-settle: cubic-bezier(0.24, 1.12, 0.38, 1);
     --duration-fast: 180ms;
     --duration-base: 280ms;
     --duration-slow: 420ms;
@@ -140,10 +134,6 @@
     --panel-bottom: 240 6% 12%;
     --panel-bottom-alpha: 0.72;
 
-    --glow-1: 211 100% 55%;
-    --glow-2: 280 90% 60%;
-    --glow-3: 190 90% 55%;
-    --glow-alpha: 0.09;
 
     --chart-1: 211 100% 52%;
     --chart-2: 135 65% 51%;
@@ -171,16 +161,11 @@
     font-size: 17px;
     line-height: 1.47;
     letter-spacing: -0.24px;
-    /* The luminous ground Apple sets glass against. Written out rather than
-       @apply-ed: Tailwind cannot apply a custom utility declared further down
-       the same sheet. Fixed attachment stops it scrolling and giving away
-       that it is a flat gradient. */
+    /* Flat neutral, the way systemGroupedBackground is. A tinted canvas is
+       the single clearest tell that an interface is imitating Apple rather
+       than following it - and glass laid over a saturated ground smears that
+       colour into every panel on the page. */
     background-color: hsl(var(--background));
-    background-image:
-      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
-      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
-    background-attachment: fixed;
     /* San Francisco where it exists, then the platform's closest equivalent */
     font-family:
       -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI Variable",
@@ -268,10 +253,10 @@
        4. a soft shadow beneath, so the pane floats above what it covers
 
      `backdrop-filter` is expensive and compounds badly when dozens of elements
-     use it at once, so there are two tiers. `.glass` is the real thing, for
-     chrome and overlays where only a handful are ever on screen. `.glass-panel`
-     reproduces the same edge language with a gradient - near-identical over a
-     static ground, at no compositing cost. Cards use the cheap one.
+     use it at once, but the real reason to ration it is meaning: glass is the
+     layer above content. These classes are for chrome and overlays - bars,
+     sidebars, sheets, popovers, toasts. Content itself uses `.surface`, which
+     is opaque, and there is no tier in between.
      ------------------------------------------------------------------------- */
 
   .glass {
@@ -280,8 +265,8 @@
       hsl(var(--glass-top) / var(--glass-top-alpha)),
       hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
     );
-    backdrop-filter: blur(30px) saturate(155%);
-    -webkit-backdrop-filter: blur(30px) saturate(155%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
@@ -295,33 +280,33 @@
       hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.1)),
       hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.1))
     );
-    backdrop-filter: blur(48px) saturate(175%);
-    -webkit-backdrop-filter: blur(48px) saturate(175%);
+    backdrop-filter: blur(48px) saturate(180%);
+    -webkit-backdrop-filter: blur(48px) saturate(180%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
       0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
-  /* Same edge language, no compositing cost. */
-  .glass-panel {
-    background: linear-gradient(
-      180deg,
-      hsl(var(--panel-top) / var(--panel-top-alpha)),
-      hsl(var(--panel-bottom) / var(--panel-bottom-alpha))
-    );
-    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.8));
-    box-shadow:
-      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.75)),
-      0 1px 2px rgb(0 0 0 / 0.04),
-      0 8px 24px -10px rgb(0 0 0 / 0.1);
+  /* Content sits on an opaque surface, never on glass.
+
+     This is the part that is easy to get wrong. Apple's cards - Settings,
+     Health, Fitness, Wallet - are secondarySystemGroupedBackground: solid
+     white on grey, solid #1C1C1E on black. They are not translucent, they do
+     not blur, and they carry a hairline and a whisper of shadow at most.
+
+     Glass belongs to the layer above this one. Making content translucent
+     too removes the distinction that gives the material its meaning, and
+     costs a compositing layer per card for the privilege. */
+  .surface {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
   }
 
-  @media (min-width: 1024px) {
-    .glass-panel {
-      backdrop-filter: blur(14px) saturate(160%);
-      -webkit-backdrop-filter: blur(14px) saturate(160%);
-    }
+  /* On black, depth reads as lightness rather than shadow. */
+  .dark .surface {
+    box-shadow: none;
   }
 
   /* Lifts the way a glass tile catches more light when raised. */
@@ -332,9 +317,8 @@
   }
   .glass-lift:hover {
     box-shadow:
-      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
       0 2px 4px rgb(0 0 0 / 0.05),
-      0 16px 40px -12px rgb(0 0 0 / 0.16);
+      0 12px 28px -12px rgb(0 0 0 / 0.14);
   }
 
   /* Colour seen through glass rather than painted flat: a bright sweep across
@@ -359,11 +343,11 @@
   .glass-toast {
     background: linear-gradient(
       180deg,
-      hsl(var(--panel-top) / calc(var(--panel-top-alpha) + 0.12)),
-      hsl(var(--panel-bottom) / calc(var(--panel-bottom-alpha) + 0.12))
+      hsl(var(--panel-top) / calc(var(--panel-top-alpha) + 0.08)),
+      hsl(var(--panel-bottom) / calc(var(--panel-bottom-alpha) + 0.08))
     );
-    backdrop-filter: blur(30px) saturate(140%);
-    -webkit-backdrop-filter: blur(30px) saturate(140%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
     border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.7));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.6)),
@@ -377,8 +361,8 @@
       hsl(var(--glass-top) / var(--glass-top-alpha)),
       hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
     );
-    backdrop-filter: blur(30px) saturate(200%);
-    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
   }
 
   .ios-material-strong {
@@ -387,8 +371,8 @@
       hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.1)),
       hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.1))
     );
-    backdrop-filter: blur(48px) saturate(210%);
-    -webkit-backdrop-filter: blur(48px) saturate(210%);
+    backdrop-filter: blur(48px) saturate(180%);
+    -webkit-backdrop-filter: blur(48px) saturate(180%);
     border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
@@ -526,15 +510,6 @@
     letter-spacing: -0.02em;
   }
 
-  /* Fixed, so it does not scroll and give away that it is a flat gradient. */
-  .app-canvas {
-    background-color: hsl(var(--background));
-    background-image:
-      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
-      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
-    background-attachment: fixed;
-  }
 
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -608,22 +583,17 @@ svg.icon-selected {
    Keyframes
    --------------------------------------------------------------------------- */
 
-/* Glass arrives by condensing: blurred and slightly small, resolving into
-   focus as it overshoots into place. A plain fade reads as paper, not glass. */
+/* Content rises a short distance and settles. Deliberately no blur ramp:
+   Apple moves content, it never defocuses it, and a filter animating on every
+   panel is expensive for an effect that reads as a rendering glitch. */
 @keyframes ios-rise {
   0% {
     opacity: 0;
-    transform: translate3d(0, 14px, 0) scale(0.97);
-    filter: blur(6px);
-  }
-  60% {
-    opacity: 1;
-    filter: blur(0);
+    transform: translate3d(0, 8px, 0) scale(0.985);
   }
   100% {
     opacity: 1;
     transform: none;
-    filter: blur(0);
   }
 }
 
@@ -636,17 +606,15 @@ svg.icon-selected {
   }
 }
 
-/* Controls popping into existence get the elastic overshoot. */
+/* Controls arriving get a small overshoot - felt more than seen. */
 @keyframes ios-pop {
   0% {
     opacity: 0;
-    transform: scale(0.86);
-    filter: blur(4px);
+    transform: scale(0.94);
   }
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
@@ -662,13 +630,11 @@ svg.icon-selected {
 @keyframes ios-scale-in {
   0% {
     opacity: 0;
-    transform: scale(0.9);
-    filter: blur(5px);
+    transform: scale(0.96);
   }
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 

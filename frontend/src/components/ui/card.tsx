@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  * A pane of Liquid Glass: translucent body, specular highlight along the top
  * inner edge, hairline rim, and a soft shadow so it floats above the canvas.
  *
- * Uses the cheap `.glass-panel` tier - a page can hold twenty of these, and
+ * Uses the opaque `.surface` tier - content never sits on glass, and
  * twenty stacked `backdrop-filter` layers would wreck scroll performance for
  * an effect nobody can see behind an opaque card anyway.
  */
@@ -22,7 +22,7 @@ const Card = React.forwardRef<
         : style
     }
     className={cn(
-      "glass-panel rounded-lg text-card-foreground",
+      "surface rounded-lg text-card-foreground",
       interactive && "glass-lift glass-sheen ios-press-subtle cursor-pointer",
       index !== undefined && "stagger-in",
       className,

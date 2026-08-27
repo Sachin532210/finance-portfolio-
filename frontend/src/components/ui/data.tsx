@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold tracking-[-0.005em] backdrop-blur-sm transition-colors [&_svg]:size-3",
+  "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold tracking-[-0.005em] transition-colors [&_svg]:size-3",
   {
     variants: {
       variant: {
@@ -206,7 +206,7 @@ const TabsTrigger = React.forwardRef<
       "ios-press-subtle inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-1 text-[13px] font-medium",
       "transition-all duration-base ease-spring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30",
       "disabled:pointer-events-none disabled:opacity-40",
-      "data-[state=active]:glass-panel data-[state=active]:text-foreground",
+      "data-[state=active]:surface data-[state=active]:text-foreground",
       className,
     )}
     {...props}
