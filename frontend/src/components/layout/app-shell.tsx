@@ -116,7 +116,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
                 "ios-press relative z-10 flex items-center gap-3 rounded-full px-3.5 py-2 text-[16px] font-medium tracking-[-0.18px]",
                 isActive
                   ? "text-primary"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                  : "text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground",
               )
             }
           >

@@ -163,7 +163,7 @@ export default function CoachPage() {
                   key={conversation.id}
                   className={cn(
                     "group flex items-center gap-1 rounded-md transition-colors",
-                    conversationId === conversation.id ? "bg-primary/10" : "hover:bg-accent",
+                    conversationId === conversation.id ? "bg-primary/10" : "hover:bg-foreground/[0.06]",
                   )}
                 >
                   <button
