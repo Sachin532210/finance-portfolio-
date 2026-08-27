@@ -6,30 +6,38 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * iOS-style control: filled shapes, generous corners, and the scale-down press
- * that UIKit gives every tappable element. `ios-press` carries the spring.
+ * Liquid Glass control.
+ *
+ * Filled variants are capsules with a bright sweep across the top third
+ * (`glass-tint`) and a shadow carrying the fill's own colour, so they read as
+ * light passing through tinted glass rather than flat paint. Quiet variants
+ * are clear glass with a hairline rim.
  */
 const buttonVariants = cva(
-  "ios-press inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-md text-[15px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-[1.05em] [&_svg]:shrink-0",
+  "ios-press inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-full text-[15px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-[1.05em] [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-ios hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-ios hover:bg-destructive/90",
-        success: "bg-success text-success-foreground shadow-ios hover:bg-success/90",
-        // iOS "tinted" button: primary colour on a soft wash of itself
-        tinted: "bg-primary/12 text-primary hover:bg-primary/20",
-        outline: "border border-border bg-card/60 hover:bg-accent",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70",
-        ghost: "hover:bg-accent",
-        link: "text-primary underline-offset-4 hover:underline",
+        default:
+          "glass-tint bg-primary text-primary-foreground shadow-[0_1px_0_0_rgb(255_255_255/0.25)_inset,0_6px_20px_-6px_hsl(var(--primary)/0.55)] hover:bg-primary/92",
+        destructive:
+          "glass-tint bg-destructive text-destructive-foreground shadow-[0_1px_0_0_rgb(255_255_255/0.25)_inset,0_6px_20px_-6px_hsl(var(--destructive)/0.55)] hover:bg-destructive/92",
+        success:
+          "glass-tint bg-success text-success-foreground shadow-[0_1px_0_0_rgb(255_255_255/0.25)_inset,0_6px_20px_-6px_hsl(var(--success)/0.55)] hover:bg-success/92",
+        // iOS "tinted": the accent colour behind frosted glass
+        tinted: "bg-primary/12 text-primary backdrop-blur-sm hover:bg-primary/20",
+        // Clear glass with a lit rim
+        outline: "glass-panel text-foreground hover:bg-accent/60",
+        secondary: "bg-secondary/80 text-secondary-foreground backdrop-blur-sm hover:bg-secondary",
+        ghost: "hover:bg-accent/70",
+        link: "rounded-md text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-2",
-        sm: "h-9 rounded-sm px-3.5 text-[13px]",
-        lg: "h-[52px] rounded-lg px-7 text-base",
+        sm: "h-9 px-4 text-[13px]",
+        lg: "h-[52px] px-7 text-base",
         icon: "h-11 w-11",
-        "icon-sm": "h-9 w-9 rounded-sm",
+        "icon-sm": "h-9 w-9",
       },
     },
     defaultVariants: { variant: "default", size: "default" },

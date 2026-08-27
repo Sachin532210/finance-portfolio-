@@ -569,7 +569,7 @@ export default function ReportsPage() {
                     { label: "Credit card", value: -summary.data.current_net_worth.credit_card },
                     { label: "Net worth", value: summary.data.current_net_worth.net_worth },
                   ].map((row) => (
-                    <div key={row.label} className="rounded-lg border border-border p-3">
+                    <div key={row.label} className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                       <p className="text-xs uppercase tracking-wide text-muted-foreground">
                         {row.label}
                       </p>

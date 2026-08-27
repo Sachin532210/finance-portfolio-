@@ -212,7 +212,7 @@ export default function DebtPage() {
         <InfoNote>{plan.explanation}</InfoNote>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Debt free in</p>
             <p className="tabular mt-1 text-xl font-semibold">
               {plan.total_months} month{plan.total_months === 1 ? "" : "s"}
@@ -221,7 +221,7 @@ export default function DebtPage() {
               About {(plan.total_months / 12).toFixed(1)} years
             </p>
           </div>
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Total interest</p>
             <p className="tabular mt-1 text-xl font-semibold">
               {formatMoney(plan.total_interest, currency)}
@@ -235,7 +235,7 @@ export default function DebtPage() {
           {plan.steps.map((step) => (
             <div
               key={step.debt_id}
-              className="flex items-center gap-3 rounded-lg border border-border p-3"
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-foreground/[0.035] p-3"
             >
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                 {step.order}
@@ -748,17 +748,17 @@ function EmiCalculator({ currency, symbol }: { currency: string; symbol: string 
 
       {data ? (
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Monthly EMI</p>
             <p className="tabular mt-1 text-xl font-semibold">{formatMoney(data.emi, currency)}</p>
           </div>
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Total interest</p>
             <p className="tabular mt-1 text-xl font-semibold text-warning">
               {formatMoney(data.total_interest, currency)}
             </p>
           </div>
-          <div className="rounded-lg border border-border p-4">
+          <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Total repayable</p>
             <p className="tabular mt-1 text-xl font-semibold">
               {formatMoney(data.total_payable, currency)}

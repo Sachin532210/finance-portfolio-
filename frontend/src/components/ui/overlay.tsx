@@ -43,18 +43,22 @@ const DialogContent = React.forwardRef<
       className={cn(
         // Phones get a true iOS sheet: pinned to the bottom, rounded top only,
         // rising with the spring curve. Desktop keeps a centred card.
-        "fixed z-50 grid gap-4 overflow-y-auto bg-card p-6 shadow-ios-modal",
-        "inset-x-0 bottom-0 max-h-[88vh] rounded-t-2xl border-t border-border pb-[calc(1.5rem+env(safe-area-inset-bottom))]",
+        "glass-strong fixed z-50 grid gap-4 overflow-y-auto p-6",
+        "inset-x-0 bottom-0 max-h-[88vh] rounded-t-[26px] pb-[calc(1.5rem+env(safe-area-inset-bottom))]",
         "data-[state=open]:animate-sheet-up data-[state=closed]:animate-sheet-down",
         "sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg",
-        "sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:border sm:pb-6",
+        "sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[26px] sm:pb-6",
         "sm:data-[state=open]:animate-scale-in sm:data-[state=closed]:animate-scale-out",
         className,
       )}
       {...props}
     >
+      <div
+        className="mx-auto -mt-2 mb-1 h-1 w-9 rounded-full bg-foreground/15 sm:hidden"
+        aria-hidden
+      />
       {children}
-      <DialogPrimitive.Close className="ios-press absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-muted-foreground hover:bg-accent focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
+      <DialogPrimitive.Close className="ios-press absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-foreground/8 text-muted-foreground backdrop-blur-sm hover:bg-foreground/15 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -127,7 +131,7 @@ function ConfirmDialog({
     <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialogPrimitive.Portal>
         <AlertDialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-fade" />
-        <AlertDialogPrimitive.Content className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-3rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-card p-6 text-center shadow-ios-modal data-[state=open]:animate-scale-in sm:text-left">
+        <AlertDialogPrimitive.Content className="glass-strong fixed left-1/2 top-1/2 z-50 w-[calc(100%-3rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-[26px] p-6 text-center data-[state=open]:animate-scale-in sm:text-left">
           <AlertDialogPrimitive.Title className="text-lg font-semibold">
             {title}
           </AlertDialogPrimitive.Title>
@@ -167,8 +171,8 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[11rem] overflow-hidden rounded-xl border border-border/70 p-1 text-popover-foreground shadow-ios-lg",
-        "ios-material-strong origin-[var(--radix-dropdown-menu-content-transform-origin)]",
+        "glass-strong z-50 min-w-[11rem] overflow-hidden rounded-[18px] p-1.5 text-popover-foreground",
+        "origin-[var(--radix-dropdown-menu-content-transform-origin)]",
         "data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out",
         className,
       )}
@@ -230,7 +234,7 @@ function InfoTooltip({ children, label }: { children: React.ReactNode; label: st
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Content
           sideOffset={6}
-          className="ios-material-strong z-50 max-w-xs rounded-xl border border-border/70 px-3 py-2 text-xs leading-relaxed text-popover-foreground shadow-ios-lg data-[state=delayed-open]:animate-scale-in"
+          className="glass-strong z-50 max-w-xs rounded-2xl px-3 py-2 text-xs leading-relaxed text-popover-foreground data-[state=delayed-open]:animate-scale-in"
         >
           {label}
           <TooltipPrimitive.Arrow className="fill-border" />

@@ -229,7 +229,7 @@ export default function CoachPage() {
                           key={question}
                           type="button"
                           onClick={() => submit(question)}
-                          className="rounded-full border border-border px-3 py-1.5 text-xs transition-colors hover:border-primary hover:text-primary"
+                          className="rounded-full border border-white/12 bg-foreground/[0.04] px-3 py-1.5 text-xs transition-colors hover:border-primary hover:text-primary"
                         >
                           {question}
                         </button>
@@ -320,7 +320,7 @@ export default function CoachPage() {
                     key={question}
                     type="button"
                     onClick={() => submit(question)}
-                    className="shrink-0 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="shrink-0 rounded-full border border-white/12 bg-foreground/[0.04] px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {question}
                   </button>

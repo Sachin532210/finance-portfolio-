@@ -37,9 +37,9 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={({ isActive }) =>
             cn(
-              "ios-press flex items-center gap-3 rounded-md px-3 py-2.5 text-[15px] font-medium",
+              "ios-press flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[15px] font-medium",
               isActive
-                ? "bg-primary/12 text-primary"
+                ? "bg-primary/15 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)] backdrop-blur-sm"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )
           }
@@ -80,12 +80,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     .toUpperCase();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* ---------------- Desktop sidebar ---------------- */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border/70 bg-card/60 backdrop-blur-xl lg:flex">
+      <aside className="glass fixed inset-y-0 left-0 z-30 hidden w-64 flex-col rounded-none border-y-0 border-l-0 lg:flex">
         <div className="flex h-16 items-center gap-2 border-b border-border px-5">
-          <div className="rounded-md bg-primary/10 p-1.5">
-            <Wallet className="h-5 w-5 text-primary" />
+          <div className="glass-tint rounded-xl bg-primary p-1.5 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.6)]">
+            <Wallet className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="text-base font-semibold tracking-tight">Finance Track</span>
         </div>
@@ -105,7 +105,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <aside className="animate-drawer-in absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col border-r border-border bg-card shadow-ios-modal">
+          <aside className="glass-strong animate-drawer-in absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col rounded-none border-y-0 border-l-0">
             <div className="flex h-16 items-center justify-between border-b border-border px-4">
               <div className="flex items-center gap-2">
                 <div className="rounded-md bg-primary/10 p-1.5">
@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* ---------------- Main column ---------------- */}
       <div className="lg:pl-64">
-        <header className="ios-material no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-border/60 px-4 sm:px-6">
+        <header className="ios-material no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-white/10 px-4 sm:px-6">
           <Button
             variant="ghost"
             size="icon"
@@ -200,7 +200,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* ---------------- Mobile bottom nav ---------------- */}
-      <nav className="ios-material no-print safe-bottom fixed inset-x-0 bottom-0 z-20 flex border-t border-border/60 lg:hidden">
+      <nav className="ios-material no-print safe-bottom fixed inset-x-0 bottom-0 z-20 flex border-t border-white/10 lg:hidden">
         {MOBILE_NAV.map((item) => (
           <NavLink
             key={item.to}

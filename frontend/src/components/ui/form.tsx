@@ -36,7 +36,8 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
       className={cn(
         // iOS text fields sit on a filled surface rather than a heavy border.
         // 16px on mobile stops Safari zooming the page on focus.
-        "flex h-11 w-full rounded-md border border-transparent bg-secondary/70 px-3.5 py-2 text-base sm:text-[15px]",
+        "flex h-11 w-full rounded-xl border border-white/10 bg-foreground/[0.04] px-3.5 py-2 text-base backdrop-blur-sm sm:text-[15px]",
+        "shadow-[inset_0_1px_2px_rgb(0_0_0/0.04)]",
         "transition-all duration-fast ease-spring placeholder:text-muted-foreground/70",
         "focus-visible:border-primary/40 focus-visible:bg-card focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
         "disabled:cursor-not-allowed disabled:opacity-40",
@@ -55,7 +56,8 @@ const Textarea = React.forwardRef<
   <textarea
     ref={ref}
     className={cn(
-      "flex min-h-[80px] w-full rounded-md border border-transparent bg-secondary/70 px-3.5 py-2.5 text-base sm:text-[15px]",
+      "flex min-h-[80px] w-full rounded-xl border border-white/10 bg-foreground/[0.04] px-3.5 py-2.5 text-base backdrop-blur-sm sm:text-[15px]",
+      "shadow-[inset_0_1px_2px_rgb(0_0_0/0.04)]",
       "transition-all duration-fast ease-spring placeholder:text-muted-foreground/70",
       "focus-visible:border-primary/40 focus-visible:bg-card focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
       "disabled:cursor-not-allowed disabled:opacity-40",
@@ -158,7 +160,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "ios-press flex h-11 w-full items-center justify-between rounded-md border border-transparent bg-secondary/70 px-3.5 py-2 text-[15px]",
+      "ios-press flex h-11 w-full items-center justify-between rounded-xl border border-white/10 bg-foreground/[0.04] px-3.5 py-2 text-[15px] backdrop-blur-sm",
       "focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
       "disabled:cursor-not-allowed disabled:opacity-40 [&>span]:line-clamp-1 [&>span]:text-left",
       className,
@@ -182,8 +184,8 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-border/70 text-popover-foreground shadow-ios-lg",
-        "ios-material-strong origin-[var(--radix-select-content-transform-origin)]",
+        "glass-strong relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-[18px] p-0.5 text-popover-foreground",
+        "origin-[var(--radix-select-content-transform-origin)]",
         "data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1 w-full min-w-[var(--radix-select-trigger-width)]",

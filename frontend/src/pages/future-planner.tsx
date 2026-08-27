@@ -239,7 +239,7 @@ export default function FuturePlannerPage() {
               </CardHeader>
 
               <CardContent className="space-y-4">
-                <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border p-3">
+                <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                   <div>
                     <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Today</p>
                     <p className="tabular text-lg font-semibold">
@@ -290,7 +290,7 @@ export default function FuturePlannerPage() {
                 <p className="text-xs leading-relaxed text-muted-foreground">{plan.explanation}</p>
 
                 {plan.notes ? (
-                  <p className="rounded-md bg-muted/50 p-2 text-xs text-muted-foreground">
+                  <p className="rounded-md bg-foreground/[0.05] p-2 text-xs text-muted-foreground">
                     {plan.notes}
                   </p>
                 ) : null}
@@ -553,7 +553,7 @@ function QuickProjection({
 
         {result ? (
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-lg border border-border p-4">
+            <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Estimated future cost
               </p>
@@ -564,7 +564,7 @@ function QuickProjection({
                 {formatMoney(result.inflation_impact, currency)} more than today
               </p>
             </div>
-            <div className="rounded-lg border border-border p-4">
+            <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Monthly, no growth
               </p>
@@ -573,7 +573,7 @@ function QuickProjection({
               </p>
               <p className="mt-0.5 text-xs text-muted-foreground">The conservative figure</p>
             </div>
-            <div className="rounded-lg border border-border p-4">
+            <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Monthly at {formatPercent(returns, 0)}
               </p>

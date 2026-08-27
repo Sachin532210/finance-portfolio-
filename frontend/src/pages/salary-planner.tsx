@@ -373,7 +373,7 @@ export default function SalaryPlannerPage() {
             { label: "On lifestyle", value: data.context.lifestyle_spent },
             { label: "EMIs due", value: data.context.emi_total },
           ].map((item) => (
-            <div key={item.label} className="rounded-lg border border-border p-4">
+            <div key={item.label} className="rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">{item.label}</p>
               <p className="tabular mt-1 text-lg font-semibold">
                 {formatMoney(item.value, currency)}

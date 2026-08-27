@@ -132,18 +132,18 @@ export default function CalendarPage() {
               <CardDescription>Every scheduled money event, day by day</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg border border-border bg-border">
+              <div className="grid grid-cols-7 gap-px overflow-hidden rounded-2xl border border-white/10 bg-foreground/10">
                 {WEEKDAYS.map((day) => (
                   <div
                     key={day}
-                    className="bg-muted px-2 py-2 text-center text-xs font-medium text-muted-foreground"
+                    className="bg-foreground/[0.06] px-2 py-2 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground backdrop-blur-sm"
                   >
                     {day}
                   </div>
                 ))}
 
                 {Array.from({ length: firstWeekday }).map((_, i) => (
-                  <div key={`pad-${i}`} className="min-h-24 bg-card" />
+                  <div key={`pad-${i}`} className="min-h-24 bg-card/40" />
                 ))}
 
                 {Array.from({ length: data.days_in_month }).map((_, index) => {
@@ -155,8 +155,8 @@ export default function CalendarPage() {
                     <div
                       key={day}
                       className={cn(
-                        "min-h-24 space-y-1 bg-card p-1.5",
-                        isToday && "ring-1 ring-inset ring-primary",
+                        "min-h-24 space-y-1 bg-card/70 p-1.5 backdrop-blur-sm",
+                        isToday && "bg-primary/[0.07] ring-1 ring-inset ring-primary/50",
                       )}
                     >
                       <span
@@ -174,7 +174,10 @@ export default function CalendarPage() {
                         return (
                           <div
                             key={i}
-                            className={cn("truncate rounded px-1.5 py-0.5 text-[10px]", meta.className)}
+                            className={cn(
+                              "truncate rounded-md px-1.5 py-0.5 text-[10px] font-medium backdrop-blur-sm",
+                              meta.className,
+                            )}
                             title={`${event.title} - ${formatMoney(event.amount, currency)}`}
                           >
                             {event.title}
@@ -210,7 +213,7 @@ export default function CalendarPage() {
                   <div
                     key={index}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg border border-border p-3",
+                      "flex items-center gap-3 rounded-xl border border-white/10 bg-foreground/[0.035] p-3",
                       isPast && "opacity-60",
                     )}
                   >

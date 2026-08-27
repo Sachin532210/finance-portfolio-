@@ -3,8 +3,12 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * The iOS grouped-list card: an elevated surface on a recessed background,
- * with soft low-contrast shadow rather than a hard border.
+ * A pane of Liquid Glass: translucent body, specular highlight along the top
+ * inner edge, hairline rim, and a soft shadow so it floats above the canvas.
+ *
+ * Uses the cheap `.glass-panel` tier - a page can hold twenty of these, and
+ * twenty stacked `backdrop-filter` layers would wreck scroll performance for
+ * an effect nobody can see behind an opaque card anyway.
  */
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -12,11 +16,14 @@ const Card = React.forwardRef<
 >(({ className, interactive, index, style, ...props }, ref) => (
   <div
     ref={ref}
-    style={index !== undefined ? ({ "--i": index } as React.CSSProperties & Record<string, number>) : style}
+    style={
+      index !== undefined
+        ? ({ "--i": index } as React.CSSProperties & Record<string, number>)
+        : style
+    }
     className={cn(
-      "rounded-lg border border-border/60 bg-card text-card-foreground shadow-ios",
-      "transition-shadow duration-base ease-spring",
-      interactive && "ios-press-subtle cursor-pointer hover:shadow-ios-lg",
+      "glass-panel rounded-lg text-card-foreground",
+      interactive && "glass-lift ios-press-subtle cursor-pointer",
       index !== undefined && "stagger-in",
       className,
     )}
@@ -47,12 +54,18 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-[13px] leading-relaxed text-muted-foreground", className)} {...props} />
+  <p
+    ref={ref}
+    className={cn("text-[13px] leading-relaxed text-muted-foreground", className)}
+    {...props}
+  />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-5 pt-0", className)} {...props} />,
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("p-5 pt-0", className)} {...props} />
+  ),
 );
 CardContent.displayName = "CardContent";
 

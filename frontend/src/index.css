@@ -11,7 +11,7 @@
 @layer base {
   :root {
     /* systemGroupedBackground / secondarySystemGroupedBackground */
-    --background: 240 24% 96%;
+    --background: 240 20% 94%;
     --foreground: 0 0% 0%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
@@ -55,6 +55,30 @@
     --chart-5: 189 62% 49%;
     --chart-6: 345 100% 59%;
 
+    /* --- Liquid Glass -----------------------------------------------
+       Light pools at the top of a pane, the rim catches a hairline of it,
+       and the specular highlight sits just inside the top edge. */
+    --glass-top: 0 0% 100%;
+    --glass-top-alpha: 0.72;
+    --glass-bottom: 240 20% 99%;
+    --glass-bottom-alpha: 0.52;
+    --glass-rim: 0 0% 100%;
+    --glass-rim-alpha: 0.7;
+    --glass-specular: 0 0% 100%;
+    --glass-specular-alpha: 0.95;
+
+    /* Cheap panels: more opaque, since they carry body text. */
+    --panel-top: 0 0% 100%;
+    --panel-top-alpha: 0.86;
+    --panel-bottom: 240 24% 99%;
+    --panel-bottom-alpha: 0.7;
+
+    /* The colour wash behind everything. */
+    --glow-1: 211 100% 60%;
+    --glow-2: 280 90% 65%;
+    --glow-3: 190 90% 60%;
+    --glow-alpha: 0.1;
+
     /* Motion. The spring is UIKit's default interactive curve. */
     --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -93,6 +117,26 @@
     --input: 240 3% 24%;
     --ring: 211 100% 52%;
 
+    /* Dark glass is lit from within rather than transmitting light. */
+    --glass-top: 0 0% 100%;
+    --glass-top-alpha: 0.1;
+    --glass-bottom: 0 0% 100%;
+    --glass-bottom-alpha: 0.04;
+    --glass-rim: 0 0% 100%;
+    --glass-rim-alpha: 0.14;
+    --glass-specular: 0 0% 100%;
+    --glass-specular-alpha: 0.22;
+
+    --panel-top: 240 6% 16%;
+    --panel-top-alpha: 0.88;
+    --panel-bottom: 240 6% 12%;
+    --panel-bottom-alpha: 0.82;
+
+    --glow-1: 211 100% 55%;
+    --glow-2: 280 90% 60%;
+    --glow-3: 190 90% 55%;
+    --glow-alpha: 0.14;
+
     --chart-1: 211 100% 52%;
     --chart-2: 135 65% 51%;
     --chart-3: 37 100% 52%;
@@ -112,7 +156,18 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
+    min-height: 100vh;
+    /* The luminous ground Apple sets glass against. Written out rather than
+       @apply-ed: Tailwind cannot apply a custom utility declared further down
+       the same sheet. Fixed attachment stops it scrolling and giving away
+       that it is a flat gradient. */
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
+    background-attachment: fixed;
     /* San Francisco where it exists, then the platform's closest equivalent */
     font-family:
       -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI Variable",
@@ -174,17 +229,119 @@
 }
 
 @layer components {
-  /* Frosted glass, as used by iOS navigation and tab bars. */
+  /* -------------------------------------------------------------------------
+     Liquid Glass
+
+     Apple's material is not a flat translucent panel. It reads as a physical
+     pane, which needs four things layered together:
+
+       1. a translucent body with light pooling toward the top
+       2. a specular highlight just inside the top edge, where light catches
+       3. a refracted rim - a hairline brighter than the fill
+       4. a soft shadow beneath, so the pane floats above what it covers
+
+     `backdrop-filter` is expensive and compounds badly when dozens of elements
+     use it at once, so there are two tiers. `.glass` is the real thing, for
+     chrome and overlays where only a handful are ever on screen. `.glass-panel`
+     reproduces the same edge language with a gradient - near-identical over a
+     static ground, at no compositing cost. Cards use the cheap one.
+     ------------------------------------------------------------------------- */
+
+  .glass {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--glass-top) / var(--glass-top-alpha)),
+      hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
+    );
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
+      inset 0 -1px 0 0 hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.4)),
+      0 8px 32px -8px rgb(0 0 0 / 0.16);
+  }
+
+  .glass-strong {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.16)),
+      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.16))
+    );
+    backdrop-filter: blur(40px) saturate(190%);
+    -webkit-backdrop-filter: blur(40px) saturate(190%);
+    border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
+      0 12px 48px -12px rgb(0 0 0 / 0.22);
+  }
+
+  /* Same edge language, no compositing cost. */
+  .glass-panel {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--panel-top) / var(--panel-top-alpha)),
+      hsl(var(--panel-bottom) / var(--panel-bottom-alpha))
+    );
+    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.8));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.75)),
+      0 1px 2px rgb(0 0 0 / 0.04),
+      0 8px 24px -10px rgb(0 0 0 / 0.1);
+  }
+
+  /* Lifts the way a glass tile catches more light when raised. */
+  .glass-lift {
+    transition:
+      transform var(--duration-base) var(--ease-spring),
+      box-shadow var(--duration-base) var(--ease-spring);
+  }
+  .glass-lift:hover {
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
+      0 2px 4px rgb(0 0 0 / 0.05),
+      0 16px 40px -12px rgb(0 0 0 / 0.16);
+  }
+
+  /* Colour seen through glass rather than painted flat: a bright sweep across
+     the top third, and the fill's own colour bleeding into the shadow. */
+  .glass-tint {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .glass-tint::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.24), transparent 58%);
+    pointer-events: none;
+  }
+
+  /* Navigation and tab bars keep their original class names. */
   .ios-material {
-    background-color: hsl(var(--card) / 0.72);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    background: linear-gradient(
+      180deg,
+      hsl(var(--glass-top) / var(--glass-top-alpha)),
+      hsl(var(--glass-bottom) / var(--glass-bottom-alpha))
+    );
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
   }
 
   .ios-material-strong {
-    background-color: hsl(var(--card) / 0.86);
-    backdrop-filter: saturate(180%) blur(30px);
-    -webkit-backdrop-filter: saturate(180%) blur(30px);
+    background: linear-gradient(
+      180deg,
+      hsl(var(--glass-top) / calc(var(--glass-top-alpha) + 0.16)),
+      hsl(var(--glass-bottom) / calc(var(--glass-bottom-alpha) + 0.16))
+    );
+    backdrop-filter: blur(40px) saturate(190%);
+    -webkit-backdrop-filter: blur(40px) saturate(190%);
+    border: 1px solid hsl(var(--glass-rim) / var(--glass-rim-alpha));
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
+      0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
   /* The press-down every iOS control does. Pointer-coarse devices get a
@@ -214,6 +371,16 @@
 }
 
 @layer utilities {
+  /* Fixed, so it does not scroll and give away that it is a flat gradient. */
+  .app-canvas {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
+    background-attachment: fixed;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

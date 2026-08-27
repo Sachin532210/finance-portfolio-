@@ -42,7 +42,7 @@ const SEVERITY_STYLES = {
   CRITICAL: { icon: AlertTriangle, className: "border-destructive/40 bg-destructive/5", tone: "text-destructive" },
   WARNING: { icon: AlertTriangle, className: "border-warning/40 bg-warning/5", tone: "text-warning" },
   SUCCESS: { icon: CheckCircle2, className: "border-success/40 bg-success/5", tone: "text-success" },
-  INFO: { icon: Info, className: "border-border bg-muted/30", tone: "text-muted-foreground" },
+  INFO: { icon: Info, className: "border-border bg-foreground/[0.03]", tone: "text-muted-foreground" },
 } as const;
 
 export default function DashboardPage() {
@@ -514,7 +514,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {data.buying_guide.slice(0, 4).map((item, index) => (
-              <div key={index} className="rounded-lg border border-border p-3">
+              <div key={index} className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                 <div className="mb-1 flex items-center gap-2">
                   <Badge
                     variant={

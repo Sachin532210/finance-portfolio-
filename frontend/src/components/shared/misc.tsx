@@ -103,7 +103,7 @@ export function MonthPicker({
   };
 
   return (
-    <div className={cn("flex items-center gap-1 rounded-md border border-border p-1", className)}>
+    <div className={cn("flex items-center gap-1 rounded-full border border-white/12 bg-foreground/[0.04] p-1", className)}>
       <Button variant="ghost" size="icon-sm" onClick={() => step(-1)} aria-label="Previous month">
         <ChevronLeft className="h-4 w-4" />
       </Button>

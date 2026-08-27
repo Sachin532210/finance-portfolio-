@@ -315,7 +315,7 @@ export default function OnboardingPage() {
                       key={s.description}
                       type="button"
                       onClick={() => addExpense(s.category, s.description)}
-                      className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                      className="rounded-full border border-white/12 bg-foreground/[0.04] px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                     >
                       + {s.description}
                     </button>
@@ -439,7 +439,7 @@ export default function OnboardingPage() {
             {step === 3 ? (
               <div className="space-y-4">
                 {debts.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-border px-6 py-10 text-center">
+                  <div className="rounded-2xl border border-dashed border-foreground/15 px-6 py-10 text-center">
                     <p className="text-sm font-medium">No debts recorded</p>
                     <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
                       If you have no loans or card balances, skip this step - that is a strong
@@ -453,7 +453,7 @@ export default function OnboardingPage() {
                 ) : (
                   <>
                     {debts.map((row) => (
-                      <div key={row.id} className="space-y-3 rounded-lg border border-border p-4">
+                      <div key={row.id} className="space-y-3 rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
                         <div className="flex items-start gap-2">
                           <Field label="Name" className="flex-1">
                             <Input

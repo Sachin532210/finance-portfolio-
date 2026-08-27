@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold tracking-[-0.005em] transition-colors [&_svg]:size-3",
+  "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold tracking-[-0.005em] backdrop-blur-sm transition-colors [&_svg]:size-3",
   {
     variants: {
       variant: {
@@ -46,7 +46,10 @@ const Progress = React.forwardRef<
 >(({ className, value, indicatorClassName, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
-    className={cn("relative h-2 w-full overflow-hidden rounded-full bg-secondary", className)}
+    className={cn(
+      "relative h-2 w-full overflow-hidden rounded-full bg-foreground/[0.08] shadow-[inset_0_1px_2px_rgb(0_0_0/0.06)]",
+      className,
+    )}
     {...props}
   >
     <ProgressPrimitive.Indicator
@@ -95,7 +98,12 @@ function StatusProgress({
 // ---------------------------------------------------------------------------
 
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("animate-pulse rounded-md bg-muted", className)} {...props} />;
+  return (
+    <div
+      className={cn("animate-pulse rounded-xl bg-foreground/[0.06]", className)}
+      {...props}
+    />
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -157,7 +165,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-secondary/80 p-[3px] text-muted-foreground",
+      "inline-flex h-10 items-center justify-center rounded-full border border-white/10 bg-foreground/[0.05] p-1 text-muted-foreground backdrop-blur-sm",
       className,
     )}
     {...props}
@@ -172,10 +180,10 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "ios-press-subtle inline-flex items-center justify-center whitespace-nowrap rounded-[7px] px-3.5 py-1 text-[13px] font-medium",
+      "ios-press-subtle inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-1 text-[13px] font-medium",
       "transition-all duration-base ease-spring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30",
       "disabled:pointer-events-none disabled:opacity-40",
-      "data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-ios",
+      "data-[state=active]:glass-panel data-[state=active]:text-foreground",
       className,
     )}
     {...props}

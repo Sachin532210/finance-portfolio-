@@ -273,7 +273,7 @@ export default function DecisionsPage() {
               </CardHeader>
 
               <CardContent className="space-y-5">
-                <div className="flex items-center gap-4 rounded-lg border border-border p-4">
+                <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-foreground/[0.035] p-4">
                   <div className="text-center">
                     <p className={cn("tabular text-4xl font-bold leading-none", scoreTone(result.score))}>
                       {result.score}
@@ -328,7 +328,7 @@ export default function DecisionsPage() {
 
                 {/* Impact */}
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-lg border border-border p-3">
+                  <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Discretionary money
                     </p>
@@ -344,7 +344,7 @@ export default function DecisionsPage() {
                       </span>
                     </p>
                   </div>
-                  <div className="rounded-lg border border-border p-3">
+                  <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Savings this month
                     </p>
@@ -363,7 +363,7 @@ export default function DecisionsPage() {
                       Savings rate would be {formatPercent(result.impact.savings_rate_after)}
                     </p>
                   </div>
-                  <div className="rounded-lg border border-border p-3">
+                  <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       Share of income
                     </p>
@@ -372,7 +372,7 @@ export default function DecisionsPage() {
                     </p>
                   </div>
                   {result.impact.goal_delayed ? (
-                    <div className="rounded-lg border border-border p-3">
+                    <div className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                       <p className="text-xs uppercase tracking-wide text-muted-foreground">
                         Goal impact
                       </p>
@@ -392,7 +392,7 @@ export default function DecisionsPage() {
                 ) : null}
 
                 {/* Reasoning */}
-                <div className="space-y-2 rounded-lg bg-muted/40 p-4">
+                <div className="space-y-2 rounded-lg bg-foreground/[0.04] p-4">
                   <p className="text-sm font-medium">The reasoning</p>
                   {result.explanation ? (
                     <div className="space-y-2 text-sm leading-relaxed text-muted-foreground">
@@ -517,7 +517,7 @@ export default function DecisionsPage() {
                           </p>
                         ) : (
                           items.map((item, index) => (
-                            <div key={index} className="rounded-lg border border-border p-3">
+                            <div key={index} className="rounded-xl border border-white/10 bg-foreground/[0.035] p-3">
                               <p className="text-sm font-medium capitalize">{item.name}</p>
                               {item.estimated_amount ? (
                                 <Badge variant="secondary" className="tabular mt-1">

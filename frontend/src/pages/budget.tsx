@@ -305,7 +305,7 @@ export default function BudgetPage() {
                 key={row.category}
                 type="button"
                 onClick={() => openEditor(row.category, Math.ceil(row.spent / 100) * 100)}
-                className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm transition-colors hover:border-primary hover:text-primary"
+                className="flex items-center gap-2 rounded-full border border-white/12 bg-foreground/[0.04] px-3 py-1.5 text-sm transition-colors hover:border-primary hover:text-primary"
               >
                 <span>{CATEGORY_LABELS[row.category] ?? row.category}</span>
                 <Badge variant="secondary" className="tabular">
