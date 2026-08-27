@@ -25,6 +25,28 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: false,
-    chunkSizeWarningLimit: 1200,
+    // Split the heavy vendors out of the entry chunk. Charting is the big one
+    // and is only needed on pages that draw graphs, so it should not sit in
+    // the critical path for the login screen.
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          charts: ["recharts"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-alert-dialog",
+            "@radix-ui/react-tooltip",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-progress",
+            "@radix-ui/react-switch",
+          ],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
 });

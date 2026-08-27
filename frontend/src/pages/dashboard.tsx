@@ -171,7 +171,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger-children grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Net worth"
           value={formatMoney(data.net_worth.net_worth, currency)}
@@ -212,7 +212,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ---------------- Row 2: the four core numbers ---------------- */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="stagger-children grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Monthly income"
           value={formatMoney(data.income.monthly, currency)}
@@ -262,7 +262,7 @@ export default function DashboardPage() {
       </div>
 
       {data.debt.total_outstanding > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="stagger-children grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             label="Total debt"
             value={formatMoney(data.debt.total_outstanding, currency)}

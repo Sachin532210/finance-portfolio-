@@ -5,35 +5,69 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AppShell } from "@/components/layout/app-shell";
 import { useAuth } from "@/context/auth-context";
 
-import BudgetPage from "@/pages/budget";
-import CalendarPage from "@/pages/calendar";
-import CoachPage from "@/pages/coach";
-import DashboardPage from "@/pages/dashboard";
-import DebtPage from "@/pages/debt";
-import DecisionsPage from "@/pages/decisions";
-import ExpensesPage from "@/pages/expenses";
-import ForgotPasswordPage from "@/pages/forgot-password";
-import FuturePlannerPage from "@/pages/future-planner";
-import GoalsPage from "@/pages/goals";
-import InvestmentsPage from "@/pages/investments";
+// Auth screens load eagerly - they are the first thing an unauthenticated
+// visitor sees, and delaying them would show a spinner on a cold start.
 import LoginPage from "@/pages/login";
-import NotFoundPage from "@/pages/not-found";
-import NotificationsPage from "@/pages/notifications";
-import OnboardingPage from "@/pages/onboarding";
-import ReportsPage from "@/pages/reports";
-import ResetPasswordPage from "@/pages/reset-password";
-import SalaryPlannerPage from "@/pages/salary-planner";
-import SavingsPage from "@/pages/savings";
-import SettingsPage from "@/pages/settings";
 import SignupPage from "@/pages/signup";
+
+/**
+ * Every other route is split into its own chunk. Recharts alone is roughly a
+ * third of the bundle, so keeping it out of the initial download is the single
+ * biggest win for time-to-interactive.
+ */
+const DashboardPage = React.lazy(() => import("@/pages/dashboard"));
+const SalaryPlannerPage = React.lazy(() => import("@/pages/salary-planner"));
+const ExpensesPage = React.lazy(() => import("@/pages/expenses"));
+const BudgetPage = React.lazy(() => import("@/pages/budget"));
+const SavingsPage = React.lazy(() => import("@/pages/savings"));
+const InvestmentsPage = React.lazy(() => import("@/pages/investments"));
+const GoalsPage = React.lazy(() => import("@/pages/goals"));
+const DebtPage = React.lazy(() => import("@/pages/debt"));
+const FuturePlannerPage = React.lazy(() => import("@/pages/future-planner"));
+const DecisionsPage = React.lazy(() => import("@/pages/decisions"));
+const ReportsPage = React.lazy(() => import("@/pages/reports"));
+const CalendarPage = React.lazy(() => import("@/pages/calendar"));
+const CoachPage = React.lazy(() => import("@/pages/coach"));
+const NotificationsPage = React.lazy(() => import("@/pages/notifications"));
+const SettingsPage = React.lazy(() => import("@/pages/settings"));
+const OnboardingPage = React.lazy(() => import("@/pages/onboarding"));
+const ForgotPasswordPage = React.lazy(() => import("@/pages/forgot-password"));
+const ResetPasswordPage = React.lazy(() => import("@/pages/reset-password"));
+const NotFoundPage = React.lazy(() => import("@/pages/not-found"));
 
 function FullScreenLoader() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-3 text-muted-foreground">
+      <div className="animate-fade flex flex-col items-center gap-3 text-muted-foreground">
         <Loader2 className="h-7 w-7 animate-spin" />
         <p className="text-sm">Loading your finances...</p>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Chunk-loading fallback. Deliberately minimal: a chunk usually arrives in
+ * well under a second, and a heavy skeleton flashing in and out reads as
+ * slower than a quiet pause.
+ */
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+    </div>
+  );
+}
+
+/**
+ * Re-mounts on every navigation so the page rises into view the way a pushed
+ * iOS view controller does.
+ */
+function PageTransition({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  return (
+    <div key={pathname} className="animate-rise">
+      {children}
     </div>
   );
 }
@@ -48,7 +82,14 @@ function Protected({ children }: { children: React.ReactNode }) {
   if (!user.onboarded && location.pathname !== "/onboarding") {
     return <Navigate to="/onboarding" replace />;
   }
-  return <AppShell>{children}</AppShell>;
+
+  return (
+    <AppShell>
+      <React.Suspense fallback={<RouteFallback />}>
+        <PageTransition>{children}</PageTransition>
+      </React.Suspense>
+    </AppShell>
+  );
 }
 
 /** Login, signup and the password-reset flow: redirect away once signed in. */
@@ -56,7 +97,7 @@ function PublicOnly({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   if (loading) return <FullScreenLoader />;
   if (user) return <Navigate to={user.onboarded ? "/dashboard" : "/onboarding"} replace />;
-  return <>{children}</>;
+  return <React.Suspense fallback={<FullScreenLoader />}>{children}</React.Suspense>;
 }
 
 export default function App() {
@@ -81,7 +122,9 @@ export default function App() {
           ) : user.onboarded ? (
             <Navigate to="/dashboard" replace />
           ) : (
-            <OnboardingPage />
+            <React.Suspense fallback={<FullScreenLoader />}>
+              <OnboardingPage />
+            </React.Suspense>
           )
         }
       />
@@ -104,7 +147,14 @@ export default function App() {
       <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
 
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route
+        path="*"
+        element={
+          <React.Suspense fallback={<FullScreenLoader />}>
+            <NotFoundPage />
+          </React.Suspense>
+        }
+      />
     </Routes>
   );
 }

@@ -23,16 +23,68 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 7px)",
+        xl: "calc(var(--radius) + 4px)",
+        "2xl": "calc(var(--radius) + 10px)",
+      },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.32, 0.72, 0, 1)",
+        "out-ios": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      },
+      transitionDuration: {
+        fast: "180ms",
+        base: "280ms",
+        slow: "420ms",
       },
       keyframes: {
-        "fade-in": { from: { opacity: "0", transform: "translateY(4px)" }, to: { opacity: "1", transform: "none" } },
-        "slide-in": { from: { transform: "translateX(-100%)" }, to: { transform: "translateX(0)" } },
+        "ios-rise": {
+          from: { opacity: "0", transform: "translate3d(0, 10px, 0) scale(0.985)" },
+          to: { opacity: "1", transform: "none" },
+        },
+        "ios-fade": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "ios-fade-out": { from: { opacity: "1" }, to: { opacity: "0" } },
+        "ios-scale-in": {
+          from: { opacity: "0", transform: "scale(0.94)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
+        "ios-scale-out": {
+          from: { opacity: "1", transform: "scale(1)" },
+          to: { opacity: "0", transform: "scale(0.96)" },
+        },
+        "ios-sheet-up": {
+          from: { opacity: "0", transform: "translate3d(0, 100%, 0)" },
+          to: { opacity: "1", transform: "none" },
+        },
+        "ios-sheet-down": {
+          from: { opacity: "1", transform: "none" },
+          to: { opacity: "0", transform: "translate3d(0, 100%, 0)" },
+        },
+        "ios-slide-left": {
+          from: { opacity: "0", transform: "translate3d(18px, 0, 0)" },
+          to: { opacity: "1", transform: "none" },
+        },
+        "ios-drawer-in": {
+          from: { transform: "translate3d(-100%, 0, 0)" },
+          to: { transform: "none" },
+        },
       },
       animation: {
-        "fade-in": "fade-in 0.25s ease-out",
-        "slide-in": "slide-in 0.2s ease-out",
+        rise: "ios-rise var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        fade: "ios-fade var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
+        "fade-out": "ios-fade-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
+        "scale-in": "ios-scale-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "scale-out": "ios-scale-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
+        "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "sheet-down": "ios-sheet-down var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "slide-left": "ios-slide-left var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "drawer-in": "ios-drawer-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+      },
+      boxShadow: {
+        /* iOS shadows are soft and low-contrast rather than dark and tight */
+        ios: "0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)",
+        "ios-lg": "0 2px 6px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.10)",
+        "ios-modal": "0 8px 40px rgba(0,0,0,0.18)",
       },
     },
   },

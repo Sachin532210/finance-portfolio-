@@ -34,7 +34,12 @@ const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLI
       type={type}
       ref={ref}
       className={cn(
-        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        // iOS text fields sit on a filled surface rather than a heavy border.
+        // 16px on mobile stops Safari zooming the page on focus.
+        "flex h-11 w-full rounded-md border border-transparent bg-secondary/70 px-3.5 py-2 text-base sm:text-[15px]",
+        "transition-all duration-fast ease-spring placeholder:text-muted-foreground/70",
+        "focus-visible:border-primary/40 focus-visible:bg-card focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
+        "disabled:cursor-not-allowed disabled:opacity-40",
         className,
       )}
       {...props}
@@ -50,7 +55,10 @@ const Textarea = React.forwardRef<
   <textarea
     ref={ref}
     className={cn(
-      "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-[80px] w-full rounded-md border border-transparent bg-secondary/70 px-3.5 py-2.5 text-base sm:text-[15px]",
+      "transition-all duration-fast ease-spring placeholder:text-muted-foreground/70",
+      "focus-visible:border-primary/40 focus-visible:bg-card focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
+      "disabled:cursor-not-allowed disabled:opacity-40",
       className,
     )}
     {...props}
@@ -150,7 +158,9 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 [&>span]:text-left",
+      "ios-press flex h-11 w-full items-center justify-between rounded-md border border-transparent bg-secondary/70 px-3.5 py-2 text-[15px]",
+      "focus:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/25",
+      "disabled:cursor-not-allowed disabled:opacity-40 [&>span]:line-clamp-1 [&>span]:text-left",
       className,
     )}
     {...props}
@@ -172,7 +182,9 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-border/70 text-popover-foreground shadow-ios-lg",
+        "ios-material-strong origin-[var(--radix-select-content-transform-origin)]",
+        "data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1 w-full min-w-[var(--radix-select-trigger-width)]",
         className,
@@ -198,7 +210,9 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-sm py-2 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-pointer select-none items-center rounded-lg py-2.5 pl-8 pr-2 text-[15px] outline-none",
+      "transition-colors duration-fast focus:bg-accent focus:text-accent-foreground",
+      "data-[disabled]:pointer-events-none data-[disabled]:opacity-40",
       className,
     )}
     {...props}

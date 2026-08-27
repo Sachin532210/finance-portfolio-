@@ -37,9 +37,9 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              "ios-press flex items-center gap-3 rounded-md px-3 py-2.5 text-[15px] font-medium",
               isActive
-                ? "bg-primary/10 text-primary"
+                ? "bg-primary/12 text-primary"
                 : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )
           }
@@ -82,7 +82,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       {/* ---------------- Desktop sidebar ---------------- */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-card lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border/70 bg-card/60 backdrop-blur-xl lg:flex">
         <div className="flex h-16 items-center gap-2 border-b border-border px-5">
           <div className="rounded-md bg-primary/10 p-1.5">
             <Wallet className="h-5 w-5 text-primary" />
@@ -101,11 +101,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="animate-fade absolute inset-0 bg-black/40 backdrop-blur-[2px]"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <aside className="animate-slide-in absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col border-r border-border bg-card">
+          <aside className="animate-drawer-in absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col border-r border-border bg-card shadow-ios-modal">
             <div className="flex h-16 items-center justify-between border-b border-border px-4">
               <div className="flex items-center gap-2">
                 <div className="rounded-md bg-primary/10 p-1.5">
@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* ---------------- Main column ---------------- */}
       <div className="lg:pl-64">
-        <header className="no-print sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
+        <header className="ios-material no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-border/60 px-4 sm:px-6">
           <Button
             variant="ghost"
             size="icon"
@@ -161,7 +161,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="ml-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
+                  className="ios-press ml-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/12 text-xs font-semibold text-primary hover:bg-primary/20"
                   aria-label="Account menu"
                 >
                   {initials}
@@ -200,14 +200,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* ---------------- Mobile bottom nav ---------------- */}
-      <nav className="no-print safe-bottom fixed inset-x-0 bottom-0 z-20 flex border-t border-border bg-card/95 backdrop-blur-md lg:hidden">
+      <nav className="ios-material no-print safe-bottom fixed inset-x-0 bottom-0 z-20 flex border-t border-border/60 lg:hidden">
         {MOBILE_NAV.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
               cn(
-                "flex flex-1 flex-col items-center gap-0.5 px-1 py-2.5 text-[10px] font-medium transition-colors",
+                "ios-press flex flex-1 flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium",
                 isActive ? "text-primary" : "text-muted-foreground",
               )
             }

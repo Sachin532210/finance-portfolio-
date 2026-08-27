@@ -2,72 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------------
+   Design tokens follow Apple's Human Interface Guidelines: the iOS system
+   palette, grouped-background layering, and the spring curve UIKit uses for
+   almost every transition.
+   --------------------------------------------------------------------------- */
+
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* systemGroupedBackground / secondarySystemGroupedBackground */
+    --background: 240 24% 96%;
+    --foreground: 0 0% 0%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 94%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 152 69% 31%;
-    --success-foreground: 210 40% 98%;
-    --warning: 32 95% 44%;
-    --warning-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --radius: 0.75rem;
+    --popover-foreground: 0 0% 0%;
 
-    --chart-1: 221 83% 53%;
-    --chart-2: 152 69% 41%;
-    --chart-3: 32 95% 54%;
-    --chart-4: 271 76% 63%;
-    --chart-5: 190 90% 42%;
-    --chart-6: 340 75% 55%;
+    /* systemBlue */
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* secondarySystemFill */
+    --secondary: 240 10% 93%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 240 10% 93%;
+    /* secondaryLabel */
+    --muted-foreground: 240 6% 44%;
+    --accent: 240 12% 91%;
+    --accent-foreground: 0 0% 0%;
+
+    /* systemRed / systemGreen / systemOrange */
+    --destructive: 3 100% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 135 59% 49%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 100% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* separator */
+    --border: 240 9% 89%;
+    --input: 240 9% 87%;
+    --ring: 211 100% 50%;
+
+    /* iOS uses generous, continuous corners */
+    --radius: 0.875rem;
+
+    /* systemBlue, systemGreen, systemOrange, systemIndigo, systemTeal, systemPink */
+    --chart-1: 211 100% 50%;
+    --chart-2: 135 59% 49%;
+    --chart-3: 35 100% 50%;
+    --chart-4: 241 62% 59%;
+    --chart-5: 189 62% 49%;
+    --chart-6: 345 100% 59%;
+
+    /* Motion. The spring is UIKit's default interactive curve. */
+    --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-out-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --duration-fast: 180ms;
+    --duration-base: 280ms;
+    --duration-slow: 420ms;
   }
 
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 96%;
-    --card: 222 44% 10%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 44% 10%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 8%;
-    --secondary: 217 33% 16%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 217 33% 16%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 19%;
-    --accent-foreground: 210 40% 96%;
-    --destructive: 0 63% 51%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 152 60% 42%;
-    --success-foreground: 222 47% 8%;
-    --warning: 38 92% 55%;
-    --warning-foreground: 222 47% 8%;
-    --border: 217 33% 18%;
-    --input: 217 33% 20%;
-    --ring: 217 91% 60%;
+    /* True black grouped background, elevated surfaces above it */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 240 4% 11%;
+    --card-foreground: 0 0% 100%;
+    --popover: 240 4% 13%;
+    --popover-foreground: 0 0% 100%;
 
-    --chart-1: 217 91% 62%;
-    --chart-2: 152 60% 48%;
-    --chart-3: 38 92% 58%;
-    --chart-4: 271 76% 68%;
-    --chart-5: 190 85% 52%;
-    --chart-6: 340 75% 62%;
+    --primary: 211 100% 52%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 3% 17%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 3% 17%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 3% 22%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 4 100% 61%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 135 65% 51%;
+    --success-foreground: 0 0% 0%;
+    --warning: 37 100% 52%;
+    --warning-foreground: 0 0% 0%;
+
+    --border: 240 3% 20%;
+    --input: 240 3% 24%;
+    --ring: 211 100% 52%;
+
+    --chart-1: 211 100% 52%;
+    --chart-2: 135 65% 51%;
+    --chart-3: 37 100% 52%;
+    --chart-4: 242 78% 68%;
+    --chart-5: 189 79% 55%;
+    --chart-6: 348 100% 61%;
   }
 
   * {
@@ -76,35 +107,51 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    /* Momentum scrolling, and no rubber-band flash on the wrong colour */
+    background-color: hsl(var(--background));
   }
 
   body {
     @apply bg-background text-foreground antialiased;
+    /* San Francisco where it exists, then the platform's closest equivalent */
+    font-family:
+      -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI Variable",
+      "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-      Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
   }
 
-  /* Numeric columns line up when digits are tabular. */
+  /* iOS tightens tracking as type gets larger */
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.022em;
+  }
+
   .tabular {
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
   }
 
+  /* Thin, unobtrusive scrollbars in the iOS style */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-border;
+    @apply rounded-full;
+    background-color: hsl(var(--muted-foreground) / 0.28);
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/40;
+    background-color: hsl(var(--muted-foreground) / 0.5);
   }
 
-  /* Remove the spinner from number inputs - money fields do not need it. */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -112,6 +159,57 @@
   }
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  /* No blue flash on tap - the scale press state replaces it */
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background-color: hsl(var(--primary) / 0.25);
+  }
+}
+
+@layer components {
+  /* Frosted glass, as used by iOS navigation and tab bars. */
+  .ios-material {
+    background-color: hsl(var(--card) / 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .ios-material-strong {
+    background-color: hsl(var(--card) / 0.86);
+    backdrop-filter: saturate(180%) blur(30px);
+    -webkit-backdrop-filter: saturate(180%) blur(30px);
+  }
+
+  /* The press-down every iOS control does. Pointer-coarse devices get a
+     slightly deeper press, matching the physical feel of a thumb tap. */
+  .ios-press {
+    transition:
+      transform var(--duration-fast) var(--ease-spring),
+      opacity var(--duration-fast) var(--ease-spring),
+      background-color var(--duration-fast) var(--ease-out-ios);
+    will-change: transform;
+  }
+  .ios-press:active {
+    transform: scale(0.96);
+  }
+  @media (pointer: coarse) {
+    .ios-press:active {
+      transform: scale(0.94);
+    }
+  }
+
+  .ios-press-subtle {
+    transition: transform var(--duration-fast) var(--ease-spring);
+  }
+  .ios-press-subtle:active {
+    transform: scale(0.985);
   }
 }
 
@@ -123,9 +221,120 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  /* Keeps the mobile bottom nav clear of the iOS home indicator. */
+
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .ease-spring {
+    transition-timing-function: var(--ease-spring);
+  }
+
+  /* Staggered entrance. Index drives the delay via --i. */
+  .stagger-in {
+    animation: ios-rise var(--duration-base) var(--ease-spring) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  /* Same effect without threading an index through every child: cards rise in
+     sequence, the way an iOS list settles after a push. Capped at 8 so a long
+     grid does not leave the last rows visibly waiting. */
+  .stagger-children > * {
+    animation: ios-rise var(--duration-base) var(--ease-spring) both;
+  }
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 45ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 90ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 135ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 225ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 270ms; }
+  .stagger-children > *:nth-child(n + 8) { animation-delay: 315ms; }
+}
+
+/* ---------------------------------------------------------------------------
+   Keyframes
+   --------------------------------------------------------------------------- */
+
+@keyframes ios-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ios-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ios-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ios-sheet-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ios-slide-left {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ios-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Accessibility: honour the system "Reduce Motion" setting rather than
+   animating regardless.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ios-press:active,
+  .ios-press-subtle:active {
+    transform: none;
   }
 }
 

@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // ---------------------------------------------------------------------------
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors [&_svg]:size-3",
+  "inline-flex items-center gap-1 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold tracking-[-0.005em] transition-colors [&_svg]:size-3",
   {
     variants: {
       variant: {
@@ -50,7 +50,10 @@ const Progress = React.forwardRef<
     {...props}
   >
     <ProgressPrimitive.Indicator
-      className={cn("h-full w-full flex-1 bg-primary transition-all", indicatorClassName)}
+      className={cn(
+        "h-full w-full flex-1 rounded-full bg-primary transition-transform duration-slow ease-spring",
+        indicatorClassName,
+      )}
       style={{ transform: `translateX(-${100 - Math.min(Math.max(value ?? 0, 0), 100)}%)` }}
     />
   </ProgressPrimitive.Root>
@@ -128,12 +131,15 @@ const Switch = React.forwardRef<
   <SwitchPrimitive.Root
     ref={ref}
     className={cn(
-      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+      "peer inline-flex h-[31px] w-[51px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent",
+      "transition-colors duration-base ease-spring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30",
+      "disabled:cursor-not-allowed disabled:opacity-40",
+      "data-[state=checked]:bg-success data-[state=unchecked]:bg-input",
       className,
     )}
     {...props}
   >
-    <SwitchPrimitive.Thumb className="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0" />
+    <SwitchPrimitive.Thumb className="pointer-events-none block h-[27px] w-[27px] rounded-full bg-white shadow-ios ring-0 transition-transform duration-base ease-spring data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0" />
   </SwitchPrimitive.Root>
 ));
 Switch.displayName = "Switch";
@@ -151,7 +157,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      "inline-flex h-9 items-center justify-center rounded-lg bg-secondary/80 p-[3px] text-muted-foreground",
       className,
     )}
     {...props}
@@ -166,7 +172,10 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+      "ios-press-subtle inline-flex items-center justify-center whitespace-nowrap rounded-[7px] px-3.5 py-1 text-[13px] font-medium",
+      "transition-all duration-base ease-spring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30",
+      "disabled:pointer-events-none disabled:opacity-40",
+      "data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-ios",
       className,
     )}
     {...props}
@@ -212,7 +221,10 @@ function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectio
 function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={cn("border-b border-border transition-colors hover:bg-muted/40", className)}
+      className={cn(
+        "border-b border-border/60 transition-colors duration-fast hover:bg-accent/50",
+        className,
+      )}
       {...props}
     />
   );
