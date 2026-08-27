@@ -79,7 +79,12 @@ export default function BudgetPage() {
 
   const copyPrevious = useMutation(
     async () => api.post<{ copied: number; message: string }>("/budgets/copy-previous", undefined, params),
-    { successMessage: (result) => result.message, onSuccess: refetch },
+    {
+      successMessage: (result) => result.message,
+      // Copying nothing is not a success.
+      successWhen: (result) => result.copied > 0,
+      onSuccess: refetch,
+    },
   );
 
   const openEditor = (category: string, amount = 0) => {

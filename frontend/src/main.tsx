@@ -1,9 +1,9 @@
 import * as React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "sonner";
 
 import App from "@/App";
+import { Toaster } from "@/components/shared/toaster";
 import { TooltipProvider } from "@/components/ui/overlay";
 import { AuthProvider } from "@/context/auth-context";
 import "@/index.css";
@@ -14,12 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <TooltipProvider delayDuration={200}>
           <App />
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            toastOptions={{ className: "text-sm" }}
-          />
+          <Toaster />
         </TooltipProvider>
       </AuthProvider>
     </BrowserRouter>

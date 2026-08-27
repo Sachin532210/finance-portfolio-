@@ -75,7 +75,12 @@ export default function NotificationsPage() {
 
   const refresh = useMutation(
     async () => api.post<{ created: number; message: string }>("/notifications/refresh"),
-    { successMessage: (result) => result.message, onSuccess: notifications.refetch },
+    {
+      successMessage: (result) => result.message,
+      // "Nothing new - you are up to date" is information, not a success.
+      successWhen: (result) => result.created > 0,
+      onSuccess: notifications.refetch,
+    },
   );
 
   const markRead = useMutation(async (id: string) => api.post(`/notifications/${id}/read`), {

@@ -74,6 +74,12 @@ export function useMutation<TArgs extends unknown[], TResult>(
   options: {
     successMessage?: string | ((result: TResult) => string);
     errorMessage?: string;
+    /**
+     * Whether the result actually did something. A request can succeed at the
+     * HTTP level while changing nothing - copying zero budgets, for instance -
+     * and a green tick would be a lie. Falsey results report as information.
+     */
+    successWhen?: (result: TResult) => boolean;
     onSuccess?: (result: TResult) => void;
     onError?: (error: unknown) => void;
   } = {},
@@ -86,11 +92,12 @@ export function useMutation<TArgs extends unknown[], TResult>(
       try {
         const result = await fn(...args);
         if (options.successMessage) {
-          toast.success(
+          const message =
             typeof options.successMessage === "function"
               ? options.successMessage(result)
-              : options.successMessage,
-          );
+              : options.successMessage;
+          const didSomething = options.successWhen ? options.successWhen(result) : true;
+          (didSomething ? toast.success : toast.info)(message);
         }
         options.onSuccess?.(result);
         return result;
