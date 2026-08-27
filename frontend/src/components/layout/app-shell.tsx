@@ -61,6 +61,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: unread } = useApiQuery<{ count: number }>("/notifications/unread-count");
 
+  // Drives the travelling pill in the mobile tab bar.
+  const activeTabIndex = MOBILE_NAV.findIndex((item) =>
+    location.pathname.startsWith(item.to),
+  );
+
+  const tabBarRef = React.useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = React.useState<{ left: number; width: number } | null>(null);
+
+  // The pill is placed from the active link's measured box. Percentage-based
+  // positioning is not reliable here, and measuring also lets tab widths vary.
+  React.useLayoutEffect(() => {
+    const container = tabBarRef.current;
+    if (!container || activeTabIndex < 0) {
+      setIndicator(null);
+      return;
+    }
+
+    const measure = () => {
+      const link = container.querySelectorAll("a")[activeTabIndex] as HTMLElement | undefined;
+      if (link) setIndicator({ left: link.offsetLeft, width: link.offsetWidth });
+    };
+
+    measure();
+
+    // Re-measure when the bar resizes - rotation, or a wider phone.
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [activeTabIndex]);
+
   // Close the drawer and scroll to top whenever the route changes.
   React.useEffect(() => {
     setMobileOpen(false);
@@ -217,28 +247,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           edge-to-edge bar with square corners is the pre-iOS-26 shape. */}
       <nav
         className={cn(
-          "no-print fixed inset-x-0 bottom-0 z-20 flex justify-center lg:hidden",
-          "px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-2",
-          // The bar itself is the capsule; this wrapper only positions it.
-          "pointer-events-none",
+          "no-print pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center lg:hidden",
+          "px-3 pb-[calc(0.6rem+env(safe-area-inset-bottom))] pt-2",
         )}
       >
-        <div className="glass-strong pointer-events-auto flex w-full max-w-md items-center gap-0.5 rounded-full p-1.5">
+        <div
+          ref={tabBarRef}
+          className="glass-strong pointer-events-auto relative flex w-full max-w-sm items-stretch rounded-full p-1.5"
+        >
+          {/* One pill travels between tabs rather than the highlight blinking
+              from one to the next. */}
+          {indicator ? (
+            <span
+              aria-hidden
+              className="absolute bottom-1.5 top-1.5 rounded-full bg-primary/15 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)] transition-[left,width] duration-base ease-gel"
+              style={{ left: indicator.left, width: indicator.width }}
+            />
+          ) : null}
+
           {MOBILE_NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  "ios-press relative flex flex-1 flex-col items-center gap-0.5 rounded-full px-1 py-2 text-[10px] font-medium",
-                  isActive
-                    ? "bg-primary/15 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)]"
-                    : "text-muted-foreground",
+                  "relative z-10 flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-full px-0.5 py-1.5",
+                  "text-[10px] font-medium transition-colors duration-base",
+                  isActive ? "text-primary" : "text-muted-foreground",
                 )
               }
             >
-              <item.icon className="h-[22px] w-[22px]" />
-              <span className="truncate leading-none">{item.label}</span>
+              {({ isActive }) => (
+                <>
+                  <item.icon
+                    className={cn(
+                      "h-[21px] w-[21px] transition-transform duration-base ease-gel",
+                      isActive && "scale-110",
+                    )}
+                    strokeWidth={isActive ? 2.4 : 2}
+                  />
+                  <span className="w-full truncate text-center leading-none">{item.label}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </div>

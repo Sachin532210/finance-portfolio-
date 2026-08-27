@@ -166,6 +166,11 @@
   body {
     @apply text-foreground antialiased;
     min-height: 100vh;
+    /* iOS Body is 17px. The web's 14-15px default is the single biggest
+       reason an otherwise-correct interface still reads as "not Apple". */
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.24px;
     /* The luminous ground Apple sets glass against. Written out rather than
        @apply-ed: Tailwind cannot apply a custom utility declared further down
        the same sheet. Fixed attachment stops it scrolling and giving away
@@ -187,11 +192,23 @@
     overscroll-behavior-y: none;
   }
 
-  /* iOS tightens tracking as type gets larger */
-  h1,
-  h2,
+  /* Tracking tightens as type grows - the ratio Apple uses across the ramp. */
+  h1 {
+    letter-spacing: -0.4px;
+  }
+  h2 {
+    letter-spacing: -0.32px;
+  }
   h3 {
-    letter-spacing: -0.022em;
+    letter-spacing: -0.24px;
+  }
+
+  /* SF Pro's semibold is 590, not 600. Where the real face is available this
+     lands on the correct optical weight instead of synthesising one. */
+  @supports (font-variation-settings: normal) {
+    .font-semibold {
+      font-weight: 590;
+    }
   }
 
   .tabular {
@@ -408,6 +425,70 @@
 }
 
 @layer utilities {
+  /* Apple's type ramp. */
+  .text-large-title {
+    font-size: 34px;
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+  .text-title-1 {
+    font-size: 28px;
+    line-height: 1.16;
+    font-weight: 700;
+    letter-spacing: -0.36px;
+  }
+  .text-title-2 {
+    font-size: 22px;
+    line-height: 1.24;
+    font-weight: 600;
+    letter-spacing: -0.26px;
+  }
+  .text-title-3 {
+    font-size: 20px;
+    line-height: 1.28;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .text-headline {
+    font-size: 17px;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.24px;
+  }
+  .text-body {
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.24px;
+  }
+  .text-callout {
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+  }
+  .text-subhead {
+    font-size: 15px;
+    line-height: 1.4;
+    letter-spacing: -0.12px;
+  }
+  .text-footnote {
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: -0.04px;
+  }
+  .text-caption {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  /* Currency figures: tabular so columns align, tight so they read as one
+     unit rather than spaced digits. */
+  .text-numeric {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum", "ss01";
+    letter-spacing: -0.02em;
+  }
+
   /* Fixed, so it does not scroll and give away that it is a flat gradient. */
   .app-canvas {
     background-color: hsl(var(--background));

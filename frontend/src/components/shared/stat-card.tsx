@@ -53,7 +53,7 @@ export function StatCard({
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-1.5">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
               {label}
             </p>
             {hint ? (
@@ -75,7 +75,7 @@ export function StatCard({
           ) : null}
         </div>
 
-        <p className={cn("tabular mt-2 text-2xl font-semibold tracking-tight", toneStyles)}>
+        <p className={cn("text-numeric text-title-2 mt-2", toneStyles)}>
           {value}
         </p>
 
