@@ -27,31 +27,109 @@ function useTheme() {
   return { theme, toggle: () => setTheme(theme === "dark" ? "light" : "dark") };
 }
 
+/**
+ * Sidebar navigation.
+ *
+ * The selection is a single capsule of glass that travels between items,
+ * rather than a background each item paints for itself. That is the iOS 26
+ * behaviour - one object moving, never a cross-fade between two - and it is
+ * what the sidebar was missing entirely: changing page used to be an instant
+ * class swap with nothing in motion.
+ *
+ * While it travels the capsule stretches along its direction of travel and
+ * squishes as it lands, in proportion to the distance covered. That is the
+ * documented behaviour of interactive Liquid Glass, and it is the part that
+ * makes the material read as liquid rather than as a sliding rectangle.
+ */
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
+  const location = useLocation();
+  const navRef = React.useRef<HTMLElement>(null);
+  const activeIndex = NAV_ITEMS.findIndex((item) => location.pathname.startsWith(item.to));
+
+  const [pill, setPill] = React.useState<{ top: number; height: number } | null>(null);
+  const [stretch, setStretch] = React.useState(1);
+  const lastTop = React.useRef<number | null>(null);
+
+  React.useLayoutEffect(() => {
+    const container = navRef.current;
+    if (!container || activeIndex < 0) {
+      setPill(null);
+      lastTop.current = null;
+      return;
+    }
+
+    const measure = () => {
+      const link = container.querySelectorAll("a")[activeIndex] as HTMLElement | undefined;
+      if (!link) return;
+      const next = { top: link.offsetTop, height: link.offsetHeight };
+      setPill(next);
+      // Longer jumps stretch further, the way a heavier pull deforms further.
+      // Capped, because past about 12% it stops reading as glass and starts
+      // reading as a rubber band.
+      if (lastTop.current !== null && lastTop.current !== next.top) {
+        setStretch(1 + Math.min(Math.abs(next.top - lastTop.current) / 900, 0.12));
+      }
+      lastTop.current = next.top;
+    };
+
+    measure();
+    // Re-measure on resize so the capsule cannot drift off its item.
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [activeIndex]);
+
+  // Release the stretch before the travel finishes, so the gel curve delivers
+  // the squish on landing instead of fighting a transform still held open.
+  React.useEffect(() => {
+    if (stretch === 1) return;
+    const id = window.setTimeout(() => setStretch(1), 190);
+    return () => window.clearTimeout(id);
+  }, [stretch]);
+
   return (
-    <nav className="stagger-children flex flex-col gap-0.5">
-      {NAV_ITEMS.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            cn(
-              "ios-press flex items-center gap-3 rounded-full px-3.5 py-2 text-[16px] font-medium tracking-[-0.18px]",
-              isActive
-                ? "glass-tint bg-primary/18 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.4),0_2px_10px_-4px_hsl(var(--primary)/0.5)]"
-                : "text-muted-foreground hover:bg-accent hover:text-foreground",
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive && "icon-selected")} />
-              <span className="truncate">{item.label}</span>
-            </>
+    <nav ref={navRef} className="relative flex flex-col gap-0.5">
+      {pill && (
+        <span
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-x-0 rounded-full bg-primary/[0.18]",
+            // Lensing: the rim bends light rather than scattering it, so it
+            // reads brighter and tighter than the fill it encloses.
+            "shadow-[inset_0_0_0_0.5px_hsl(var(--primary)/0.38),inset_0_1px_0_0_rgb(255_255_255/0.45),0_2px_10px_-4px_hsl(var(--primary)/0.5)]",
+            "transition-[top,height,transform] duration-base ease-gel",
           )}
-        </NavLink>
-      ))}
+          style={{ top: pill.top, height: pill.height, transform: `scaleY(${stretch})` }}
+        />
+      )}
+
+      {/* The capsule must not live inside this container: stagger-children
+          animates every direct child with ios-rise, whose final keyframe sets
+          transform: none, and a running animation beats an inline transform. */}
+      <div className="stagger-children contents">
+        {NAV_ITEMS.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            onClick={onNavigate}
+            className={({ isActive }) =>
+              cn(
+                "ios-press relative z-10 flex items-center gap-3 rounded-full px-3.5 py-2 text-[16px] font-medium tracking-[-0.18px]",
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive && "icon-selected")} />
+                <span className="truncate">{item.label}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </div>
     </nav>
   );
 }
