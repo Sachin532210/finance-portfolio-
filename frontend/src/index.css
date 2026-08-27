@@ -216,37 +216,22 @@
     font-feature-settings: "tnum";
   }
 
-  /* macOS uses overlay scrollbars - hidden until you actually scroll - so a
-     permanent gutter looks wrong against this material. Scrolling itself is
-     untouched: wheel, trackpad, keyboard and touch all behave normally, and
-     the bar is left visible inside scrollable panels where it is the only
-     cue that there is more to see. */
-  html,
-  body {
+  /* macOS keeps scrollbars hidden until you actually scroll, so a painted
+     gutter looks wrong against this material - and a bar running down the
+     edge of a frosted sidebar looks worse still.
+
+     Scrolling itself is untouched. Wheel, trackpad, keyboard, touch and
+     programmatic scrollTop all behave exactly as before; only the painted
+     bar goes. Applied to every element so new scroll containers inherit it
+     without needing to remember a utility class. */
+  * {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     width: 0;
     height: 0;
     display: none;
-  }
-
-  /* Inner scroll areas keep a thin bar. */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply rounded-full;
-    background-color: hsl(var(--muted-foreground) / 0.28);
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--muted-foreground) / 0.5);
   }
 
   input[type="number"]::-webkit-outer-spin-button,

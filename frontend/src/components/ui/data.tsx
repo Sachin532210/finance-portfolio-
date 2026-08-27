@@ -139,15 +139,34 @@ const Switch = React.forwardRef<
   <SwitchPrimitive.Root
     ref={ref}
     className={cn(
-      "peer inline-flex h-[31px] w-[51px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent",
+      // 51x31pt with a 27pt thumb - the iOS switch metrics.
+      "group peer relative inline-flex h-[31px] w-[51px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent",
       "transition-colors duration-base ease-spring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/30",
       "disabled:cursor-not-allowed disabled:opacity-40",
-      "data-[state=checked]:bg-success data-[state=unchecked]:bg-input",
+      // Off: a recessed well. On: tinted glass with a specular top edge and a
+      // shadow carrying its own colour, the same treatment as filled buttons.
+      "data-[state=unchecked]:bg-foreground/[0.13] data-[state=unchecked]:shadow-[inset_0_1px_3px_rgb(0_0_0/0.18)]",
+      "data-[state=checked]:bg-success data-[state=checked]:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.4),0_2px_10px_-2px_hsl(var(--success)/0.5)]",
       className,
     )}
     {...props}
   >
-    <SwitchPrimitive.Thumb className="pointer-events-none block h-[27px] w-[27px] rounded-full bg-white shadow-ios ring-0 transition-transform duration-base ease-spring data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0" />
+    {/* The bright sweep across the top of the track when it is on. */}
+    <span
+      aria-hidden
+      className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/25 to-transparent to-[58%] opacity-0 transition-opacity duration-base group-data-[state=checked]:opacity-100"
+    />
+    <SwitchPrimitive.Thumb
+      className={cn(
+        "pointer-events-none relative block h-[27px] w-[27px] rounded-full ring-0",
+        // A raised object: gradient body, contact hairline, soft drop shadow.
+        "bg-gradient-to-b from-white to-white/92",
+        "shadow-[0_0_0_0.5px_rgb(0_0_0/0.05),0_1px_1px_rgb(0_0_0/0.08),0_3px_6px_rgb(0_0_0/0.18)]",
+        // Overshoots very slightly on release, the way a physical toggle settles.
+        "transition-transform duration-base ease-gel",
+        "data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
+      )}
+    />
   </SwitchPrimitive.Root>
 ));
 Switch.displayName = "Switch";
