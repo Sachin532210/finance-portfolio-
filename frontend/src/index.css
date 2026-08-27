@@ -79,12 +79,20 @@
     --glow-3: 190 90% 60%;
     --glow-alpha: 0.1;
 
-    /* Motion. The spring is UIKit's default interactive curve. */
+    /* Motion.
+       `spring` is UIKit's standard interactive curve - no overshoot, used for
+       anything that must not draw attention to itself.
+       `gel` overshoots, which is what makes glass feel elastic rather than
+       rigid. It is the Liquid Glass signature and belongs on press and entry.
+       `settle` is a longer, softer overshoot for surfaces arriving on screen. */
     --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out-ios: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-gel: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-settle: cubic-bezier(0.22, 1.35, 0.36, 1);
     --duration-fast: 180ms;
     --duration-base: 280ms;
     --duration-slow: 420ms;
+    --duration-settle: 560ms;
   }
 
   .dark {
@@ -344,29 +352,58 @@
       0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
-  /* The press-down every iOS control does. Pointer-coarse devices get a
-     slightly deeper press, matching the physical feel of a thumb tap. */
+  /* Gel press: compresses fast on the way down, then overshoots slightly on
+     release, the way a soft solid rebounds. The asymmetry is the point - a
+     symmetric ease reads as rigid plastic. */
   .ios-press {
     transition:
-      transform var(--duration-fast) var(--ease-spring),
-      opacity var(--duration-fast) var(--ease-spring),
-      background-color var(--duration-fast) var(--ease-out-ios);
+      transform var(--duration-base) var(--ease-gel),
+      opacity var(--duration-fast) var(--ease-out-ios),
+      background-color var(--duration-fast) var(--ease-out-ios),
+      box-shadow var(--duration-base) var(--ease-gel);
     will-change: transform;
   }
   .ios-press:active {
-    transform: scale(0.96);
+    /* Squish rather than uniform shrink: glass spreads a little as it flattens. */
+    transform: scale(0.95, 0.93);
+    transition-duration: 90ms;
+    transition-timing-function: var(--ease-out-ios);
   }
   @media (pointer: coarse) {
     .ios-press:active {
-      transform: scale(0.94);
+      transform: scale(0.93, 0.9);
     }
   }
 
   .ios-press-subtle {
-    transition: transform var(--duration-fast) var(--ease-spring);
+    transition: transform var(--duration-base) var(--ease-gel);
   }
   .ios-press-subtle:active {
-    transform: scale(0.985);
+    transform: scale(0.985, 0.978);
+    transition-duration: 90ms;
+  }
+
+  /* Light travelling across a pane as it settles, or under the pointer. */
+  .glass-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .glass-sheen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.5)) 48%,
+      transparent 62%
+    );
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+  .glass-sheen:hover::before {
+    animation: glass-sweep 900ms var(--ease-out-ios);
   }
 }
 
@@ -402,7 +439,7 @@
 
   /* Staggered entrance. Index drives the delay via --i. */
   .stagger-in {
-    animation: ios-rise var(--duration-base) var(--ease-spring) both;
+    animation: ios-rise var(--duration-settle) var(--ease-settle) both;
     animation-delay: calc(var(--i, 0) * 45ms);
   }
 
@@ -410,7 +447,7 @@
      sequence, the way an iOS list settles after a push. Capped at 8 so a long
      grid does not leave the last rows visibly waiting. */
   .stagger-children > * {
-    animation: ios-rise var(--duration-base) var(--ease-spring) both;
+    animation: ios-rise var(--duration-settle) var(--ease-settle) both;
   }
   .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
   .stagger-children > *:nth-child(2) { animation-delay: 45ms; }
@@ -426,14 +463,45 @@
    Keyframes
    --------------------------------------------------------------------------- */
 
+/* Glass arrives by condensing: blurred and slightly small, resolving into
+   focus as it overshoots into place. A plain fade reads as paper, not glass. */
 @keyframes ios-rise {
-  from {
+  0% {
     opacity: 0;
-    transform: translate3d(0, 10px, 0) scale(0.985);
+    transform: translate3d(0, 14px, 0) scale(0.97);
+    filter: blur(6px);
   }
-  to {
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
     opacity: 1;
     transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes glass-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* Controls popping into existence get the elastic overshoot. */
+@keyframes ios-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.86);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
   }
 }
 
@@ -447,22 +515,24 @@
 }
 
 @keyframes ios-scale-in {
-  from {
+  0% {
     opacity: 0;
-    transform: scale(0.94);
+    transform: scale(0.9);
+    filter: blur(5px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: scale(1);
+    filter: blur(0);
   }
 }
 
 @keyframes ios-sheet-up {
-  from {
+  0% {
     opacity: 0;
-    transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0) scale(0.98);
   }
-  to {
+  100% {
     opacity: 1;
     transform: none;
   }
@@ -502,6 +572,12 @@
   .ios-press:active,
   .ios-press-subtle:active {
     transform: none;
+  }
+  .glass-sheen:hover::before {
+    animation: none;
+  }
+  * {
+    filter: none !important;
   }
 }
 

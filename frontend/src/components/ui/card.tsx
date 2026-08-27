@@ -23,7 +23,7 @@ const Card = React.forwardRef<
     }
     className={cn(
       "glass-panel rounded-lg text-card-foreground",
-      interactive && "glass-lift ios-press-subtle cursor-pointer",
+      interactive && "glass-lift glass-sheen ios-press-subtle cursor-pointer",
       index !== undefined && "stagger-in",
       className,
     )}

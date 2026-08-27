@@ -126,30 +126,40 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* ---------------- Main column ---------------- */}
       <div className="lg:pl-64">
-        <header className="ios-material no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-white/10 px-4 sm:px-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
+        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6">
+          <button
+            type="button"
+            className="ios-press glass-strong flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:glass lg:hidden"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
-          </Button>
+          </button>
 
-          <Link to="/dashboard" className="flex items-center gap-2 lg:hidden">
-            <Wallet className="h-5 w-5 text-primary" />
-            <span className="font-semibold">Finance Track</span>
+          <Link
+            to="/dashboard"
+            className="ios-press glass-strong flex items-center gap-2 rounded-full py-2 pl-2.5 pr-4 sm:glass lg:hidden"
+          >
+            <Wallet className="h-[18px] w-[18px] text-primary" />
+            <span className="text-[15px] font-semibold">Finance Track</span>
           </Link>
 
-          <div className="ml-auto flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
+          <div className="ml-auto flex items-center gap-1.5">
+            <button
+              type="button"
+              className="ios-press glass-strong flex h-10 w-10 items-center justify-center rounded-full sm:glass"
+              onClick={toggle}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+            </button>
 
             <Button variant="ghost" size="icon" asChild aria-label="Notifications">
-              <Link to="/notifications" className="relative">
-                <Bell className="h-4 w-4" />
+              <Link
+                to="/notifications"
+                className="ios-press glass-strong relative flex h-10 w-10 items-center justify-center rounded-full sm:glass"
+              >
+                <Bell className="h-[18px] w-[18px]" />
                 {unread && unread.count > 0 ? (
                   <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-semibold text-destructive-foreground">
                     {unread.count > 9 ? "9+" : unread.count}
@@ -161,7 +171,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className="ios-press ml-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/12 text-xs font-semibold text-primary hover:bg-primary/20"
+                  className="ios-press glass-strong ml-0.5 flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold text-primary sm:glass"
                   aria-label="Account menu"
                 >
                   {initials}
@@ -194,28 +204,44 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-[1400px] px-4 pb-24 pt-6 sm:px-6 lg:pb-10">
+        {/* Bottom padding clears the floating tab bar, which content passes
+            beneath rather than stopping above. */}
+        <main className="mx-auto w-full max-w-[1400px] px-4 pb-32 pt-6 sm:px-6 lg:pb-10">
           {children}
         </main>
       </div>
 
-      {/* ---------------- Mobile bottom nav ---------------- */}
-      <nav className="ios-material no-print safe-bottom fixed inset-x-0 bottom-0 z-20 flex border-t border-white/10 lg:hidden">
-        {MOBILE_NAV.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              cn(
-                "ios-press flex flex-1 flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-medium",
-                isActive ? "text-primary" : "text-muted-foreground",
-              )
-            }
-          >
-            <item.icon className="h-5 w-5" />
-            <span className="truncate">{item.label}</span>
-          </NavLink>
-        ))}
+      {/* ---------------- Mobile tab bar ----------------
+          Liquid Glass detaches the tab bar from the screen edges and floats it
+          as a capsule, so content scrolls behind and refracts through it. An
+          edge-to-edge bar with square corners is the pre-iOS-26 shape. */}
+      <nav
+        className={cn(
+          "no-print fixed inset-x-0 bottom-0 z-20 flex justify-center lg:hidden",
+          "px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-2",
+          // The bar itself is the capsule; this wrapper only positions it.
+          "pointer-events-none",
+        )}
+      >
+        <div className="glass-strong pointer-events-auto flex w-full max-w-md items-center gap-0.5 rounded-full p-1.5">
+          {MOBILE_NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                cn(
+                  "ios-press relative flex flex-1 flex-col items-center gap-0.5 rounded-full px-1 py-2 text-[10px] font-medium",
+                  isActive
+                    ? "bg-primary/15 text-primary shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)]"
+                    : "text-muted-foreground",
+                )
+              }
+            >
+              <item.icon className="h-[22px] w-[22px]" />
+              <span className="truncate leading-none">{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
       </nav>
     </div>
   );

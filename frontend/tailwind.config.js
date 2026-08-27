@@ -31,6 +31,8 @@ export default {
       transitionTimingFunction: {
         spring: "cubic-bezier(0.32, 0.72, 0, 1)",
         "out-ios": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        gel: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        settle: "cubic-bezier(0.22, 1.35, 0.36, 1)",
       },
       transitionDuration: {
         fast: "180ms",
@@ -39,14 +41,19 @@ export default {
       },
       keyframes: {
         "ios-rise": {
-          from: { opacity: "0", transform: "translate3d(0, 10px, 0) scale(0.985)" },
-          to: { opacity: "1", transform: "none" },
+          "0%": { opacity: "0", transform: "translate3d(0, 14px, 0) scale(0.97)", filter: "blur(6px)" },
+          "60%": { opacity: "1", filter: "blur(0)" },
+          "100%": { opacity: "1", transform: "none", filter: "blur(0)" },
         },
         "ios-fade": { from: { opacity: "0" }, to: { opacity: "1" } },
         "ios-fade-out": { from: { opacity: "1" }, to: { opacity: "0" } },
         "ios-scale-in": {
-          from: { opacity: "0", transform: "scale(0.94)" },
-          to: { opacity: "1", transform: "scale(1)" },
+          "0%": { opacity: "0", transform: "scale(0.9)", filter: "blur(5px)" },
+          "100%": { opacity: "1", transform: "scale(1)", filter: "blur(0)" },
+        },
+        "ios-pop": {
+          "0%": { opacity: "0", transform: "scale(0.86)", filter: "blur(4px)" },
+          "100%": { opacity: "1", transform: "scale(1)", filter: "blur(0)" },
         },
         "ios-scale-out": {
           from: { opacity: "1", transform: "scale(1)" },
@@ -70,12 +77,13 @@ export default {
         },
       },
       animation: {
-        rise: "ios-rise var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        rise: "ios-rise var(--duration-settle) cubic-bezier(0.22, 1.35, 0.36, 1) both",
+        pop: "ios-pop var(--duration-base) cubic-bezier(0.34, 1.56, 0.64, 1) both",
         fade: "ios-fade var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
         "fade-out": "ios-fade-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
-        "scale-in": "ios-scale-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "scale-in": "ios-scale-in var(--duration-base) cubic-bezier(0.34, 1.56, 0.64, 1) both",
         "scale-out": "ios-scale-out var(--duration-fast) cubic-bezier(0.25, 0.1, 0.25, 1) both",
-        "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.32, 0.72, 0, 1) both",
+        "sheet-up": "ios-sheet-up var(--duration-slow) cubic-bezier(0.22, 1.35, 0.36, 1) both",
         "sheet-down": "ios-sheet-down var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
         "slide-left": "ios-slide-left var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
         "drawer-in": "ios-drawer-in var(--duration-base) cubic-bezier(0.32, 0.72, 0, 1) both",
