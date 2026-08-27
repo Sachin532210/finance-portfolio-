@@ -43,7 +43,7 @@ export default {
         // No blur. Apple moves content, it does not defocus it - a blur
         // ramp on entry is a web flourish, and an expensive one.
         "ios-rise": {
-          "0%": { opacity: "0", transform: "translate3d(0, 8px, 0) scale(0.985)" },
+          "0%": { opacity: "0", transform: "translate3d(0, 8px, 0)" },
           "100%": { opacity: "1", transform: "none" },
         },
         "ios-fade": { from: { opacity: "0" }, to: { opacity: "1" } },

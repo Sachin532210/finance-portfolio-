@@ -641,7 +641,7 @@ svg.icon-selected {
 @keyframes ios-rise {
   0% {
     opacity: 0;
-    transform: translate3d(0, 8px, 0) scale(0.985);
+    transform: translate3d(0, 8px, 0);
   }
   100% {
     opacity: 1;
