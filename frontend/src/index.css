@@ -69,9 +69,9 @@
 
     /* Cheap panels: more opaque, since they carry body text. */
     --panel-top: 0 0% 100%;
-    --panel-top-alpha: 0.86;
+    --panel-top-alpha: 0.74;
     --panel-bottom: 240 24% 99%;
-    --panel-bottom-alpha: 0.7;
+    --panel-bottom-alpha: 0.58;
 
     /* The colour wash behind everything. */
     --glow-1: 211 100% 60%;
@@ -136,9 +136,9 @@
     --glass-specular-alpha: 0.22;
 
     --panel-top: 240 6% 16%;
-    --panel-top-alpha: 0.88;
+    --panel-top-alpha: 0.8;
     --panel-bottom: 240 6% 12%;
-    --panel-bottom-alpha: 0.82;
+    --panel-bottom-alpha: 0.72;
 
     --glow-1: 211 100% 55%;
     --glow-2: 280 90% 60%;
@@ -313,6 +313,13 @@
       inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.75)),
       0 1px 2px rgb(0 0 0 / 0.04),
       0 8px 24px -10px rgb(0 0 0 / 0.1);
+  }
+
+  @media (min-width: 1024px) {
+    .glass-panel {
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+    }
   }
 
   /* Lifts the way a glass tile catches more light when raised. */

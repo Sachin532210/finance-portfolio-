@@ -112,8 +112,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       {/* ---------------- Desktop sidebar ---------------- */}
-      <aside className="glass fixed inset-y-0 left-0 z-30 hidden w-64 flex-col rounded-none border-y-0 border-l-0 lg:flex">
-        <div className="flex h-16 items-center gap-2 border-b border-border px-5">
+      <aside className="glass fixed inset-y-3 left-3 z-30 hidden w-60 flex-col overflow-hidden rounded-[22px] lg:flex">
+        <div className="flex h-16 items-center gap-2 border-b border-white/10 px-5">
           <div className="glass-tint rounded-xl bg-primary p-1.5 shadow-[0_4px_14px_-4px_hsl(var(--primary)/0.6)]">
             <Wallet className="h-5 w-5 text-primary-foreground" />
           </div>
@@ -122,7 +122,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 overflow-y-auto p-3">
           <NavList />
         </div>
-        <div className="border-t border-border p-3 text-[11px] leading-relaxed text-muted-foreground">
+        <div className="border-t border-white/10 p-3 text-[11px] leading-relaxed text-muted-foreground">
           Planning and educational tool. Not licensed financial advice.
         </div>
       </aside>
@@ -155,8 +155,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       ) : null}
 
       {/* ---------------- Main column ---------------- */}
-      <div className="lg:pl-64">
-        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6">
+      <div className="lg:pl-[264px]">
+        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6 lg:mt-3 lg:mr-3 lg:rounded-[22px] lg:border">
           <button
             type="button"
             className="ios-press glass-strong flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:glass lg:hidden"

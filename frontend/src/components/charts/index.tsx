@@ -122,6 +122,10 @@ export function DonutChart({
               height={36}
               iconType="circle"
               iconSize={8}
+              // Recharts sizes a horizontal legend from its content rather than
+              // its container, which overflows narrow screens. Pinning the
+              // wrapper to the container width makes the items wrap.
+              wrapperStyle={{ width: "100%", left: 0, paddingTop: 4 }}
               formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
             />
           ) : null}
@@ -181,6 +185,7 @@ export function GroupedBarChart({
         <Legend
           iconType="circle"
           iconSize={8}
+          wrapperStyle={{ width: "100%", left: 0 }}
           formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
         />
         {bars.map((bar, index) => (
@@ -285,6 +290,7 @@ export function TrendLineChart({
           <Legend
             iconType="circle"
             iconSize={8}
+            wrapperStyle={{ width: "100%", left: 0 }}
             formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
           />
         ) : null}
