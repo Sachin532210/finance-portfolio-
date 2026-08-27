@@ -36,11 +36,11 @@ export function StatCard({
   }[tone];
 
   const iconBg = {
-    default: "bg-muted text-muted-foreground",
-    primary: "bg-primary/10 text-primary",
-    success: "bg-success/10 text-success",
-    warning: "bg-warning/10 text-warning",
-    destructive: "bg-destructive/10 text-destructive",
+    default: "bg-foreground/[0.07] text-muted-foreground",
+    primary: "bg-primary/15 text-primary",
+    success: "bg-success/15 text-success",
+    warning: "bg-warning/15 text-warning",
+    destructive: "bg-destructive/15 text-destructive",
   }[tone];
 
   const goodWhenUp = trend?.goodWhenUp ?? true;
@@ -69,8 +69,8 @@ export function StatCard({
             ) : null}
           </div>
           {Icon ? (
-            <div className={cn("rounded-md p-2", iconBg)}>
-              <Icon className="h-4 w-4" />
+            <div className={cn("icon-chip h-9 w-9", iconBg)}>
+              <Icon className="h-[18px] w-[18px]" />
             </div>
           ) : null}
         </div>

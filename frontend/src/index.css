@@ -216,7 +216,24 @@
     font-feature-settings: "tnum";
   }
 
-  /* Thin, unobtrusive scrollbars in the iOS style */
+  /* macOS uses overlay scrollbars - hidden until you actually scroll - so a
+     permanent gutter looks wrong against this material. Scrolling itself is
+     untouched: wheel, trackpad, keyboard and touch all behave normally, and
+     the bar is left visible inside scrollable panels where it is the only
+     cue that there is more to see. */
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  /* Inner scroll areas keep a thin bar. */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -374,6 +391,17 @@
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
       0 12px 48px -12px rgb(0 0 0 / 0.22);
+  }
+
+  /* The tinted chip Apple sets a symbol in. */
+  .icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    box-shadow:
+      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.45)),
+      0 1px 3px rgb(0 0 0 / 0.06);
   }
 
   /* Gel press: compresses fast on the way down, then overshoots slightly on
@@ -545,6 +573,33 @@
   .stagger-children > *:nth-child(6) { animation-delay: 225ms; }
   .stagger-children > *:nth-child(7) { animation-delay: 270ms; }
   .stagger-children > *:nth-child(n + 8) { animation-delay: 315ms; }
+}
+
+/* ---------------------------------------------------------------------------
+   Icon weight
+
+   Lucide draws at 2px, which reads thin beside 17px body text; SF Symbols
+   carry more optical weight at the same size.
+
+   Written outside every @layer on purpose. Tailwind scans layered CSS and
+   drops any rule whose class it cannot find in the source, and `lucide` is
+   added by the icon library at runtime, so a layered rule is silently
+   removed from the build.
+   --------------------------------------------------------------------------- */
+
+svg.lucide {
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A selected symbol takes its filled variant. Lucide ships no filled set, so a
+   heavier stroke plus a low-opacity fill of the same colour stands in.
+   Qualified with svg so it outranks the rule above rather than losing to it. */
+svg.icon-selected {
+  stroke-width: 2.3;
+  fill: currentColor;
+  fill-opacity: 0.16;
 }
 
 /* ---------------------------------------------------------------------------

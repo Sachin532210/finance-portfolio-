@@ -44,8 +44,12 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
             )
           }
         >
-          <item.icon className="h-[18px] w-[18px] shrink-0" />
-          <span className="truncate">{item.label}</span>
+          {({ isActive }) => (
+            <>
+              <item.icon className={cn("h-[18px] w-[18px] shrink-0", isActive && "icon-selected")} />
+              <span className="truncate">{item.label}</span>
+            </>
+          )}
         </NavLink>
       ))}
     </nav>
@@ -161,8 +165,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       ) : null}
 
       {/* ---------------- Main column ---------------- */}
-      <div className="lg:pl-[264px]">
-        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6 lg:mr-3 lg:mt-3 lg:h-14 lg:rounded-[22px] lg:border">
+      {/* 240px sidebar + its own 12px inset. The column adds the matching
+          12px itself, so the gutters either side of it are equal. */}
+      <div className="lg:pl-[252px]">
+        {/* Toolbar and content share one centred column, so they stay
+            aligned with each other and the measure stays readable on a
+            wide screen instead of running the full width. */}
+        <div className="mx-auto w-full max-w-[1240px] lg:px-3">
+        <header className="no-print safe-top sticky top-0 z-20 flex h-16 items-center gap-2 px-4 sm:ios-material sm:border-b sm:border-white/10 sm:px-6 lg:mt-3 lg:h-14 lg:rounded-[22px] lg:border">
           <button
             type="button"
             className="ios-press glass-strong flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:glass lg:hidden"
@@ -249,9 +259,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Bottom padding clears the floating tab bar, which content passes
             beneath rather than stopping above. */}
-        <main className="mx-auto w-full max-w-[1400px] px-4 pb-32 pt-6 sm:px-6 lg:pb-10 lg:pl-0 lg:pr-3 lg:pt-4">
+        <main className="w-full px-4 pb-32 pt-6 sm:px-6 lg:px-0 lg:pb-10 lg:pt-4">
           {children}
         </main>
+        </div>
       </div>
 
       {/* ---------------- Mobile tab bar ----------------
@@ -295,9 +306,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <item.icon
                     className={cn(
                       "h-[21px] w-[21px] transition-transform duration-base ease-gel",
-                      isActive && "scale-110",
+                      isActive && "icon-selected scale-110",
                     )}
-                    strokeWidth={isActive ? 2.4 : 2}
                   />
                   <span className="w-full truncate text-center leading-none">{item.label}</span>
                 </>

@@ -100,7 +100,7 @@ export function ErrorState({
   return (
     <Card className="border-destructive/40">
       <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-        <div className="rounded-full bg-destructive/10 p-3">
+        <div className="icon-chip h-14 w-14 bg-destructive/15">
           <AlertTriangle className="h-6 w-6 text-destructive" />
         </div>
         <div>
@@ -145,7 +145,7 @@ export function EmptyState({
       )}
     >
       {Icon ? (
-        <div className="rounded-full bg-muted p-3">
+        <div className="icon-chip h-14 w-14 bg-foreground/[0.06]">
           <Icon className="h-6 w-6 text-muted-foreground" />
         </div>
       ) : null}
