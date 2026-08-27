@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://finance-track-api.onrender.com/api/:path*"
+      "destination": "https://finance-track-api-lp61.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
