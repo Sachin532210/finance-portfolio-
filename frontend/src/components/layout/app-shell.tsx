@@ -192,6 +192,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [location.pathname]);
 
+  // Pointer events fire far faster than the screen refreshes, and each write
+  // to a custom property invalidates style for the subtree that reads it.
+  // Coalescing to one write per frame turns dozens of style recalcs per
+  // second into at most sixty, and the glint cannot render faster than that
+  // anyway.
+  const glintFrame = React.useRef(0);
+  const handleGlint = React.useCallback((e: React.PointerEvent<HTMLElement>) => {
+    if (glintFrame.current) return;
+    const el = e.currentTarget;
+    const { clientX, clientY } = e;
+    glintFrame.current = requestAnimationFrame(() => {
+      glintFrame.current = 0;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--glint-x", `${clientX - r.left}px`);
+      el.style.setProperty("--glint-y", `${clientY - r.top}px`);
+    });
+  }, []);
+
   const handleLogout = async () => {
     await logout();
     navigate("/login", { replace: true });
@@ -210,11 +228,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* ---------------- Desktop sidebar ---------------- */}
       <aside
-        onPointerMove={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          e.currentTarget.style.setProperty("--glint-x", `${e.clientX - r.left}px`);
-          e.currentTarget.style.setProperty("--glint-y", `${e.clientY - r.top}px`);
-        }}
+        onPointerMove={handleGlint}
         className="glass glass-refract glass-specular fixed inset-y-3 left-3 z-30 hidden w-60 flex-col overflow-hidden rounded-[22px] lg:flex"
       >
         <div className="relative z-10 flex h-16 items-center gap-2 border-b border-white/10 px-5">

@@ -197,14 +197,11 @@
     font-size: 17px;
     line-height: 1.47;
     letter-spacing: -0.24px;
-    /* The ground the panes are lit against. Fixed, so it does not scroll
-       and give away that it is a gradient. */
+    /* Flat fill only. The gradient lives on #app-ground below, because
+       background-attachment: fixed forces the browser to repaint the gradient
+       on every scroll frame instead of letting the compositor translate the
+       page - the most expensive single declaration you can put on a body. */
     background-color: hsl(var(--background));
-    background-image:
-      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
-      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
-    background-attachment: fixed;
     /* San Francisco where it exists, then the platform's closest equivalent */
     font-family:
       -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI Variable",
@@ -214,6 +211,21 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: none;
+  }
+
+  /* The ambient ground. A fixed, painted-once layer rather than a fixed
+     background-attachment: same pixels, but the compositor can leave it alone
+     while the page scrolls over it. */
+  #app-ground {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 0%, hsl(var(--glow-1) / var(--glow-alpha)), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 85% 8%, hsl(var(--glow-2) / var(--glow-alpha)), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, hsl(var(--glow-3) / var(--glow-alpha)), transparent 60%);
   }
 
   /* Tracking tightens as type grows - the ratio Apple uses across the ramp. */
@@ -443,10 +455,25 @@
     backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
     -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
     border: 1px solid hsl(var(--glass-rim) / var(--lens-rim-alpha));
+    /* Four edges, not one fill. In Apple's own material art the glass is
+       almost invisible through the middle and everything that reads as glass
+       happens at the rim:
+         1. a brilliant specular hairline along the top, where light catches
+         2. a second, dimmer refracted edge just inside it - the give-away
+            that the rim has thickness rather than being a drawn outline
+         3. a returned highlight along the bottom, light that has passed
+            through and come back
+         4. a soft lift beneath, so it sits above rather than on
+       All of it is border and box-shadow, so it costs nothing to raster -
+       which is why this can stay at full strength on every device while the
+       refraction is tiered. */
     box-shadow:
       inset 0 1px 0 0 hsl(var(--glass-specular) / var(--glass-specular-alpha)),
-      inset 0 -1px 0 0 hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.5)),
-      0 2px 8px -2px rgb(0 0 0 / 0.18);
+      inset 0 2.5px 2px -2px hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.55)),
+      inset 0 -1px 0 0 hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.7)),
+      inset 0 0 0 0.5px hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.35)),
+      0 1px 1px rgb(0 0 0 / 0.06),
+      0 4px 12px -4px rgb(0 0 0 / 0.22);
   }
 
   /* Refraction, laid over a pane that is already glass.
@@ -523,7 +550,6 @@
       opacity var(--duration-fast) var(--ease-out-ios),
       background-color var(--duration-fast) var(--ease-out-ios),
       box-shadow var(--duration-base) var(--ease-gel);
-    will-change: transform;
   }
   .ios-press:active {
     /* Squish rather than uniform shrink: glass spreads a little as it flattens. */
@@ -701,6 +727,69 @@ svg.icon-selected {
   stroke-width: 2.3;
   fill: currentColor;
   fill-opacity: 0.16;
+}
+
+/* ---------------------------------------------------------------------------
+   Low tier
+
+   Set by lib/perf-tier.ts from what the device reports, then corrected by a
+   frame-time probe. Everything that defines the look is kept - palette,
+   geometry, radii, type, motion, the rim, the specular edge. Only the
+   backdrop work goes, because that is where the cost actually is.
+
+   The fills go up to compensate. A translucent panel with no blur behind it
+   shows sharp content straight through and becomes unreadable, so opacity has
+   to replace the blur rather than simply losing it. This is the same trade
+   iOS makes under Reduce Transparency.
+   --------------------------------------------------------------------------- */
+
+html[data-perf="low"] {
+  --glass-top-alpha: 0.9;
+  --glass-bottom-alpha: 0.86;
+  --panel-top-alpha: 0.96;
+  --panel-bottom-alpha: 0.94;
+  --lens-top-alpha: 0.9;
+  --lens-bottom-alpha: 0.84;
+}
+
+html[data-perf="low"].dark {
+  --glass-top-alpha: 0.16;
+  --glass-bottom-alpha: 0.13;
+  --panel-top-alpha: 0.14;
+  --panel-bottom-alpha: 0.11;
+  --lens-top-alpha: 0.22;
+  --lens-bottom-alpha: 0.18;
+}
+
+html[data-perf="low"] .glass,
+html[data-perf="low"] .glass-strong,
+html[data-perf="low"] .surface,
+html[data-perf="low"] .glass-lens,
+html[data-perf="low"] .glass-toast,
+html[data-perf="low"] .ios-material,
+html[data-perf="low"] .ios-material-strong {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Refraction and the pointer glint are the two most expensive things here -
+   an SVG displacement filter over a live backdrop, and a gradient that
+   repaints as the pointer moves. Neither survives the low tier. */
+html[data-perf="low"] .glass-refract::before,
+html[data-perf="low"] .glass-specular::after {
+  display: none;
+}
+
+/* Long, soft shadows are cheap to declare and expensive to rasterise. */
+html[data-perf="low"] .surface {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+/* Skip layout, paint and raster for cards that are not on screen. The stored
+   size means the scrollbar does not jump as they resolve. */
+html[data-perf="low"] .surface {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
 }
 
 /* ---------------------------------------------------------------------------
