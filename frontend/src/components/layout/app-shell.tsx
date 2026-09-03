@@ -96,7 +96,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           className={cn(
             // Clear glass, not a blue fill. The colour belongs to the icon
             // and label above it - see .glass-lens.
-            "glass-lens glass-refract glass-refract-tight pointer-events-none absolute inset-x-0 rounded-full",
+            "glass-lens pointer-events-none absolute inset-x-0 rounded-full",
             "transition-[top,height,transform] duration-base ease-gel",
           )}
           style={{

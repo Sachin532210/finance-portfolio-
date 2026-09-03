@@ -81,9 +81,9 @@
        at 0.74 the old value was effectively opaque, which is why this never
        read as glass no matter what sat behind it. */
     --panel-top: 0 0% 100%;
-    --panel-top-alpha: 0.58;
+    --panel-top-alpha: 0.97;
     --panel-bottom: 240 24% 99%;
-    --panel-bottom-alpha: 0.42;
+    --panel-bottom-alpha: 0.94;
 
     /* Glass is only glass when there is something behind it. This is the
        ambient light the panes refract - kept broad and slow so it reads as
@@ -160,9 +160,9 @@
     /* Dark glass is lit from within: white at low alpha over black, rather
        than a grey fill. That is what makes an edge catch light on black. */
     --panel-top: 0 0% 100%;
-    --panel-top-alpha: 0.11;
+    --panel-top-alpha: 0.1;
     --panel-bottom: 0 0% 100%;
-    --panel-bottom-alpha: 0.055;
+    --panel-bottom-alpha: 0.075;
 
     /* Carries further on black, where there is more room for it. */
     --glow-1: 211 100% 55%;
@@ -339,29 +339,33 @@
       0 12px 48px -12px rgb(0 0 0 / 0.22);
   }
 
-  /* Card glass - a real pane, not a gradient imitating one.
+  /* The CONTENT layer. Fill and vibrancy - never glass.
 
-     The blur is unconditional. It used to be wrapped in a min-width: 1024px
-     query, so every phone got a flat fill and the material simply was not
-     there. A slightly smaller radius than the chrome tiers keeps the blur
-     affordable at ten-plus panes per page while still visibly refracting.
+     WWDC25 "Meet Liquid Glass" is explicit: Liquid Glass is reserved for the
+     navigation layer floating above content, and putting it in the content
+     layer makes it compete with the chrome and muddies the hierarchy. Their
+     worked example is exactly this case - a table view rendered as glass.
 
-     The rim and the specular edge do most of the work: they are what separate
-     one pane from the next when both are translucent, and without them a
-     screen of glass cards collapses into a single wash. */
+     This is the rule that explains why nothing here felt like Liquid Glass no
+     matter how the material was tuned. Everything was glass, and when
+     everything is glass nothing reads as glass: there is no layer for the
+     navigation to float above. Cards are fills so that the chrome can be the
+     material.
+
+     It is also, conveniently, the entire performance problem. Twenty-one
+     backdrop roots on the dashboard become zero on every device rather than
+     only on weak ones. */
   .surface {
     background: linear-gradient(
       180deg,
       hsl(var(--panel-top) / var(--panel-top-alpha)),
       hsl(var(--panel-bottom) / var(--panel-bottom-alpha))
     );
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid hsl(var(--glass-rim) / calc(var(--glass-rim-alpha) * 0.8));
+    border: 1px solid hsl(var(--border));
     box-shadow:
-      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.8)),
+      inset 0 1px 0 0 hsl(var(--glass-specular) / calc(var(--glass-specular-alpha) * 0.5)),
       0 1px 2px rgb(0 0 0 / 0.04),
-      0 10px 30px -12px rgb(0 0 0 / 0.16);
+      0 6px 16px -10px rgb(0 0 0 / 0.12);
   }
 
   /* Lifts the way a glass tile catches more light when raised. */
@@ -452,8 +456,12 @@
       hsl(var(--glass-top) / var(--lens-top-alpha)),
       hsl(var(--glass-bottom) / var(--lens-bottom-alpha))
     );
-    backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
-    -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(1.04);
+    /* No backdrop-filter. This capsule sits inside the sidebar, which is
+       already Liquid Glass, and the session is explicit that glass must never
+       be stacked on glass - the guidance is to use fills, transparency and
+       vibrancy for the element on top so it reads as a thin overlay. Blurring
+       an already-blurred pane also buys nothing visually while costing a
+       second backdrop root. */
     border: 1px solid hsl(var(--glass-rim) / var(--lens-rim-alpha));
     /* Four edges, not one fill. In Apple's own material art the glass is
        almost invisible through the middle and everything that reads as glass
@@ -727,6 +735,58 @@ svg.icon-selected {
   stroke-width: 2.3;
   fill: currentColor;
   fill-opacity: 0.16;
+}
+
+/* ---------------------------------------------------------------------------
+   System accessibility settings
+
+   The session lists three behaviours the system applies to Liquid Glass on
+   the user's behalf. Reduced Motion was already handled; these are the other
+   two, which had no equivalent here at all.
+   --------------------------------------------------------------------------- */
+
+/* "Makes Liquid Glass frostier, obscures more content." Note this is NOT the
+   low performance tier: the blur is kept and strengthened, because the intent
+   is legibility rather than saving GPU time. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong,
+  .glass-lens,
+  .glass-toast,
+  .ios-material,
+  .ios-material-strong {
+    --glass-top-alpha: 0.97;
+    --glass-bottom-alpha: 0.95;
+    --lens-top-alpha: 0.97;
+    --lens-bottom-alpha: 0.95;
+  }
+  .glass-refract::before,
+  .glass-specular::after {
+    display: none;
+  }
+}
+
+/* "Elements predominantly black or white, with contrasting border
+   highlights." */
+@media (prefers-contrast: more) {
+  .glass,
+  .glass-strong,
+  .glass-lens,
+  .glass-toast,
+  .surface {
+    --glass-top-alpha: 1;
+    --glass-bottom-alpha: 1;
+    --panel-top-alpha: 1;
+    --panel-bottom-alpha: 1;
+    --lens-top-alpha: 1;
+    --lens-bottom-alpha: 1;
+    border-color: hsl(var(--foreground) / 0.55);
+    box-shadow: none;
+  }
+  .glass-refract::before,
+  .glass-specular::after {
+    display: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
